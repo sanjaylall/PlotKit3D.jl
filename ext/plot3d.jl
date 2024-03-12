@@ -1,10 +1,16 @@
 
 module Plot3D
 
-export mesh, mesh_height_color_fn, mesh_height_fn
+using PlotKit
+
+#export mesh, mesh_height_color_fn, mesh_height_fn
 
 
 using Cairo
+
+using ..Basic3D: Vec3, Array23, Array32, Array33, dot
+using ..Axes3D: Axis3, Box3, Box3f, drawaxis3, ctxfromaxis
+
 
 
 ##############################################################################
@@ -16,7 +22,7 @@ using Cairo
 
 
 # cfun is a function, mapping (x,y) to color of patch
-function mesh(ctx, ax3, x, y, Z, cfun;
+function PlotKit.mesh(ctx, ax3, x, y, Z, cfun;
               linecolor = Color(:black),
               linewidth = 0.3,
               xlineindices = 1:size(Z,1),
@@ -88,7 +94,7 @@ boundingbox3(x,y,z) = Box3(minimum(x), maximum(x),
 
 
 
-function mesh(x, y, Z, cfun; patchcolor = [0.8,0.8,1], kwargs...)
+function PlotKit.mesh(x, y, Z, cfun; patchcolor = [0.8,0.8,1], kwargs...)
     b = boundingbox3(x,y,Z)
     axis3 = Axis3(b; kwargs...)
     d = Drawable(axis3.width, axis3.height)
@@ -107,7 +113,7 @@ end
 
 
 # accepts height and color functions
-function mesh_height_color_fn(x, y, f::Function, cfun::Function; kwargs...)
+function PlotKit.mesh_height_color_fn(x, y, f::Function, cfun::Function; kwargs...)
     Z = zeros(length(x), length(y))
     for xi in 1:length(x)
         for yi in 1:length(y)
@@ -118,7 +124,7 @@ function mesh_height_color_fn(x, y, f::Function, cfun::Function; kwargs...)
 end
 
 # accepts a function instead of a Z matrix
-function mesh_height_fn(x, y, f::Function; patchcolor = Color(0.8,0.8,1), kwargs...)
+function PlotKit.mesh_height_fn(x, y, f::Function; patchcolor = Color(0.8,0.8,1), kwargs...)
     cfun(i,j) = patchcolor
     mesh_height_color_fn(x, y, f, cfun; kwargs...)
 end

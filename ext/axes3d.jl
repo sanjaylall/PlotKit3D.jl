@@ -2,7 +2,10 @@
 module Axes3D
 
 using PlotKit
-using ..Basic3D: Vec3, Array23, Array32
+using LinearAlgebra
+
+using ..Basic3D: Vec3, Array23, Array32, hadamard, hadamarddiv, dot
+
 
 export Axis3, AxisMap3, Box3, Box3f, drawaxis3, ctxfromcube, axisfromcube
 export cubefromctx, ctxfromaxis, AxisOptions3

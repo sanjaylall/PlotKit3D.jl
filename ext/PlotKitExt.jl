@@ -49,6 +49,7 @@ using .RTcairo
 ##############################################################################
 function reexport(m)
     for a in names(m)
+        println(a)
         eval(Expr(:export, a))
     end
 end
