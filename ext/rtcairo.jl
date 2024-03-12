@@ -4,11 +4,14 @@ module RTcairo
 
 using PlotKit
 
+using ..Axes3D: Box3, Box3f, AxisMap3, get_hexagon, cubefromctx
 using ..RayTracer: Camera
+
 # This file contains the code that the raytracer uses
 # to transfer the raytraced image onto a Cairo surface
 #
 
+export cairoimagefrommatrix
 
 
 ##############################################################################

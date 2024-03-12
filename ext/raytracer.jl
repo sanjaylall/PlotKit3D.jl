@@ -12,7 +12,7 @@ export Camera, raytrace_main
 
 using PlotKit
 
-using ..Axes3D: Box3, Box3f, AxisMap3
+using ..Axes3D: Box3, Box3f, AxisMap3, get_hexagon, cubefromctx
 using ..CoreRT
 using ..RTloop
 

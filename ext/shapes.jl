@@ -5,12 +5,12 @@ using LinearAlgebra
 
 using ..Basic3D: Vec3, Array23, Array32, Array33
 using ..Axes3D: Box3, Box3f
-using ..CoreRT: Texture, Shape, CoreRT
+using ..CoreRT: Texture, Shape, CoreRT, nohit, Hitdata, gettexture
 
 # interface to Shape objects
 # getdistancefromstripe is only required to support grid texture
-export hitnormal,  hittexture,  hitshape,  init!,   getdistancefromstripe
-export transform
+#export hitnormal,  hittexture,  hitshape,  init!,   getdistancefromstripe
+#export transform
 
 # Shape Objects
 export Ellipsoid, ArbitrarySolid, Polytope, Unitcube

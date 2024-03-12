@@ -4,17 +4,20 @@ module RTloop
 # actual raytracer code lives here
 
 using PlotKit
+using LinearAlgebra
 
-using ..Basic3D: Vec3, Array23, Array32, Array33
+using ..Basic3D: Vec3, Array23, Array32, Array33, dot, vec3_hadamard, vec3_hadamarddiv
 using ..Axes3D: Box3, Box3f
-using ..CoreRT: Texture, Shape, CoreRT, Material
-
+using ..CoreRT: Texture, Shape, CoreRT, Material, hitnormal,  hittexture,  hitshape,  init!, getdistancefromstripe, nohit, Hitdata
+using ..Shapes: intersectunitcube
 
 # this code does the actual raytracing
 export traceray
 export Light, Lighting
 
-
+hadamard(p::RGBColor, q::RGBColor) = rgbcolor_hadamard(p,q)
+hadamard(p::RGBAColor, q::RGBAColor) = rgbacolor_hadamard(p,q)
+hadamard(p::Vec3, q::Vec3) = vec3_hadamard(p,q)
 
 ##############################################################################
 struct Light
@@ -127,8 +130,8 @@ function intersectcube(rayorigin, raydirection, cube)
     q = Vec3(qx, qy, qz)
 
     
-    origin = vhadamard(rayorigin - q, s)
-    direction = vhadamard(raydirection, s)
+    origin = hadamard(rayorigin - q, s)
+    direction = hadamard(raydirection, s)
 
     te, tl, face = intersectunitcube(origin, direction)
     

@@ -1,6 +1,15 @@
 
 module Surface3D
 
+using PlotKit
+
+using ..Axes3D: Box3, Box3f, AxisOptions3, Axis3, drawaxis3, get_hexagon
+using ..CoreRT: Grid, transform, addlimits, hitshape
+using ..ShapeSurface: Surface
+using ..RTloop: Lighting
+using ..RayTracer: Camera, raytrace_main
+using ..RTcairo: cairoimagefrommatrix
+
 Base.@kwdef mutable struct RaytraceOptions
     lighting = Lighting()
     refine = true
@@ -96,7 +105,7 @@ function getlimitsfromfn(box2, zfun::Function)
 end
 
 
-function surf(zfun, dzfun; kw...)
+function PlotKit.surf(zfun, dzfun; kw...)
     so = SurfaceOptions()
     setoptions!(so, "", kw...)
     setoptions!(so.rto, "raytrace_", kw...)

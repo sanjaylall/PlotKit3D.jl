@@ -39,17 +39,17 @@ using .RTloop
 include("raytracer.jl")
 using .RayTracer
 
+include("rtcairo.jl")
+using .RTcairo
+
 include("surface3d.jl")
 using .Surface3D
 
-include("rtcairo.jl")
-using .RTcairo
 
 
 ##############################################################################
 function reexport(m)
     for a in names(m)
-        println(a)
         eval(Expr(:export, a))
     end
 end

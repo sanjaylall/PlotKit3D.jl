@@ -4,13 +4,15 @@ module Axes3D
 using PlotKit
 using LinearAlgebra
 
-using ..Basic3D: Vec3, Array23, Array32, hadamard, hadamarddiv, dot
+using ..Basic3D: Vec3, Array23, Array32, dot, vec3_hadamard, vec3_hadamarddiv
 
 
 export Axis3, AxisMap3, Box3, Box3f, drawaxis3, ctxfromcube, axisfromcube
 export cubefromctx, ctxfromaxis, AxisOptions3
 export get_hexagon
 
+hadamard(p::Vec3, q::Vec3) = vec3_hadamard(p,q)
+hadamarddiv(p::Vec3, q::Vec3) = vec3_hadamard_div(p,q)
 
 mutable struct Box3
     xmin
@@ -350,6 +352,7 @@ function projectors(azimuth, elevation, scale3)
     return P, Pinv, depth, up
 
 end
+
 
 
 cubefromaxis(a::AxisMap3, q::Vec3) = hadamard(a.scale, q) + a.origin

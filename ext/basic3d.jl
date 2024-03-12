@@ -4,7 +4,7 @@ module Basic3D
 using PlotKit
 using LinearAlgebra
 
-export Vec3, Array33, Array32, Array23, Arrayn3, dot, normalize
+export Vec3, Array33, Array32, Array23, Arrayn3, dot, normalize, vec3_hadamard, vec3_hadamarddiv
 
 struct Vec3
     x::Float64
@@ -13,6 +13,9 @@ struct Vec3
 end
 
 eval(makevector(Vec3))
+
+println("vh = ", vec3_hadamard)
+
 
 # 3 by 3 matrix
 struct Array33

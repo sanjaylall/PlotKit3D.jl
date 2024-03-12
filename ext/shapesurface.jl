@@ -5,10 +5,10 @@ using LinearAlgebra
 
 using ..Basic3D: Vec3, Array23, Array32, Array33
 using ..Axes3D: Box3, Box3f
-using ..CoreRT: Texture, Shape, CoreRT
+using ..CoreRT: Texture, Shape, CoreRT, nohit, Hitdata, gettexture
 
 export Surface
-#xsexport hitnormal,  hittexture,  hitshape,  init!,   getdistancefromstripe
+
 
 ##############################################################################
 
