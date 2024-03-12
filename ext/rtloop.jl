@@ -3,32 +3,16 @@ module RTloop
 
 # actual raytracer code lives here
 
-using ..PlotKit
-using ..CoreRT
-using ..Core3d
+using PlotKit
 
-include("shapes.jl")
-using .Shapes
-
-include("shapesurface.jl")
-using .ShapeSurface
-
-include("shapetransform.jl")
-using .ShapeTransform
-
-include("shapeintersection.jl")
-using .ShapeIntersection
-
-# from shapesurface
-export Surface
-
-# from shapes
-export Ellipsoid, ArbitrarySolid, Polytope, Unitcube, init!
+using ..Basic3D: Vec3, Array23, Array32, Array33
+using ..Axes3D: Box3, Box3f
+using ..CoreRT: Texture, Shape, CoreRT, Material
 
 
 # this code does the actual raytracing
 export traceray
-export Light, Lighting, Material
+export Light, Lighting
 
 
 

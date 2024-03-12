@@ -1,4 +1,7 @@
 
+module Plot3D
+
+export mesh, mesh_height_color_fn, mesh_height_fn
 
 
 using Cairo
@@ -126,21 +129,6 @@ end
 
 
 
+end
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#end

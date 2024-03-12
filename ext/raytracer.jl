@@ -2,16 +2,17 @@
 ##############################################################################
 # the abstract type which we can see
 
-module Raytracer
+module RayTracer
 
 # from here
 export Camera, raytrace_main
 
-# from corert
-export Shape, Texture, Grid, transform
 
-using ..PlotKit
-using ..Core3d
+#export Shape, Texture, Grid, transform
+
+using PlotKit
+
+using ..Axes3D: Box3, Box3f, AxisMap3
 using ..CoreRT
 using ..RTloop
 

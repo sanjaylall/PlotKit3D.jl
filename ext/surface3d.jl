@@ -1,4 +1,6 @@
 
+module Surface3D
+
 Base.@kwdef mutable struct RaytraceOptions
     lighting = Lighting()
     refine = true
@@ -113,4 +115,6 @@ function surf(zfun, dzfun; kw...)
     surface = Surface(zfun, dzfun; so.sampleheight, so.samplegradient,
                       so.texture1, so.texture2)
     raytrace([surface], box3, so.rto)
+end
+
 end

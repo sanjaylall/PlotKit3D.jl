@@ -10,28 +10,37 @@ PlotKit.setup3d() = println("working")
 
 
 include("basic3d.jl")
-using Basic3D
+using .Basic3D
 
 include("axes3d.jl")
-using Axes3D
+using .Axes3D
 
 include("plot3d.jl")
-using Plot3D
-
-include("ctools.jl")
-using Ctools
+using .Plot3D
 
 include("corert.jl")
 using .CoreRT
+
+include("shapes.jl")
+using .Shapes
+
+include("shapesurface.jl")
+using .ShapeSurface
+
+include("shapetransform.jl")
+using .ShapeTransform
+
+include("shapeintersection.jl")
+using .ShapeIntersection
 
 include("rtloop.jl")
 using .RTloop
 
 include("raytracer.jl")
-using .Raytracer
+using .RayTracer
 
-include("surface.jl")
-using .Surface
+include("surface3d.jl")
+using .Surface3D
 
 include("rtcairo.jl")
 using .RTcairo
@@ -46,9 +55,16 @@ end
 
 
 reexport(Basic3D)
-reexport(Axes3)
-reexport(Plot3)
-reexport(Surface)
+reexport(Axes3D)
+reexport(Plot3D)
+reexport(CoreRT)
+reexport(Shapes)
+reexport(ShapeSurface)
+reexport(ShapeTransform)
+reexport(ShapeIntersection)
+reexport(RTloop)
+reexport(RayTracer)
+reexport(Surface3D)
 reexport(RTcairo)
 
 

@@ -1,6 +1,9 @@
 
 module Basic3D
 
+using PlotKit
+using LinearAlgebra
+
 export Vec3, Array33, Array32, Array23, Arrayn3, dot, normalize
 
 struct Vec3
@@ -44,4 +47,6 @@ Base.:*(P::Array32, q::Point) = P.x*q.x + P.y*q.y
 Array32(A::Array{Float64,2}) = Array32([z[:] for z in eachcol(A)]...)
 Base.convert(::Type{Array32}, x) = Array32(x)
 Base.convert(::Type{Array32}, x::Array32) = x
+
+end
 

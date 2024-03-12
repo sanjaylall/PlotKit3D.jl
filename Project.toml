@@ -3,6 +3,10 @@ authors = ["Sanjay Lall <lall@stanford.edu>"]
 uuid = "71affed6-3314-4d45-8a89-281a91f05348"
 version = "0.1.0"
 
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Cairo = "159f3aea-2a34-519c-b102-8c37f9878175"
+
 [weakdeps]
 PlotKit = "003d7de4-8e60-4dbf-84f8-37f925e78aff"
 

@@ -2,8 +2,10 @@
 module CoreRT
 
 using LinearAlgebra
-using ..PlotKit
-using ..Core3d
+using PlotKit
+using ..Basic3D: Vec3
+using ..Axes3D: Box3
+
 
 abstract type Shape end
 abstract type Texture end
@@ -23,7 +25,7 @@ init!() = return
 hitnormal() = return
 hittexture() = return
 hitshape() = return
-init!() = return
+
 getdistancefromstripe() = return
 transform() = return
 

@@ -1,4 +1,14 @@
 
+module Axes3D
+
+using PlotKit
+using ..Basic3D: Vec3, Array23, Array32
+
+export Axis3, AxisMap3, Box3, Box3f, drawaxis3, ctxfromcube, axisfromcube
+export cubefromctx, ctxfromaxis, AxisOptions3
+export get_hexagon
+
+
 mutable struct Box3
     xmin
     xmax
@@ -527,4 +537,6 @@ end
 
 
 
+
+end
 

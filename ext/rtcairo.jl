@@ -1,4 +1,10 @@
 
+
+module RTcairo
+
+using PlotKit
+
+using ..RayTracer: Camera
 # This file contains the code that the raytracer uses
 # to transfer the raytraced image onto a Cairo surface
 #
@@ -37,5 +43,6 @@ function cairoimagefrommatrix(X::Array{Float64,3})
 end
     
 
+end
 
 
