@@ -10,6 +10,8 @@ using ..RTloop: Lighting
 using ..RayTracer: Camera, raytrace_main
 using ..RTcairo: cairoimagefrommatrix
 
+const pk = PlotKit
+
 Base.@kwdef mutable struct RaytraceOptions
     lighting = Lighting()
     refine = true
@@ -36,7 +38,7 @@ end
     
 
 
-function raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
+function pk.raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
     renderwidth = ifnotmissing(rto.renderwidth, axis3.width)
     renderheight = ifnotmissing(rto.renderheight, axis3.height)
     camera = Camera(axis3.axismap3, axis3.width, axis3.height, renderwidth, renderheight)
@@ -56,7 +58,7 @@ function raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
 end
 
 
-function raytrace(shapes, box, rto::RaytraceOptions)
+function pk.raytrace(shapes, box, rto::RaytraceOptions)
     axis3 = Axis3(box, rto.axisoptions3)
     d = Drawable(axis3.width, axis3.height)
     drawaxis3(d.ctx, axis3)
@@ -76,7 +78,7 @@ function parse_raytrace_options(; kw...)
 end
 
 
-function raytrace(shapes, box; kw...)
+function pk.raytrace(shapes, box; kw...)
     rto = parse_raytrace_options(; kw...)
     raytrace(shapes, box, rto)
 end

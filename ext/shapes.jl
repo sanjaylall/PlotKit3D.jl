@@ -2,18 +2,24 @@
 module Shapes
 
 using LinearAlgebra
+using PlotKit
 
 using ..Basic3D: Vec3, Array23, Array32, Array33
 using ..Axes3D: Box3, Box3f
 using ..CoreRT: Texture, Shape, CoreRT, nohit, Hitdata, gettexture
+
+
+const pk = PlotKit
 
 # interface to Shape objects
 # getdistancefromstripe is only required to support grid texture
 #export hitnormal,  hittexture,  hitshape,  init!,   getdistancefromstripe
 #export transform
 
+
+
 # Shape Objects
-export Ellipsoid, ArbitrarySolid, Polytope, Unitcube
+export ArbitrarySolid, Polytope, Unitcube
 
 # special case
 export intersectunitcube
@@ -26,15 +32,14 @@ export intersectunitcube
 # Ellipsoid
 
 # set is (x-c)^T A (x-c) < 1
-mutable struct Ellipsoid{S<:Texture} <: Shape
+mutable struct Ellipsoid{S<:Texture} <: pk.Ellipsoid
     A::Array33
     q::Vec3
     texture::S
 end
 
-Ellipsoid(A, q, texture::S) where {S<:Texture} = Ellipsoid{S}(A, q, texture)
-
-Ellipsoid(A::Array{T}, q, texture::S) where {T<:Number, S<:Texture} = Ellipsoid{S}(Array33(A), q, texture)
+pk.Ellipsoid(A, q, texture::S) where {S<:Texture} = Ellipsoid{S}(A, q, texture)
+pk.Ellipsoid(A::Array{T}, q, texture::S) where {T<:Number, S<:Texture} = Ellipsoid{S}(Array33(A), q, texture)
 
 function getparams(p::Ellipsoid)
     A = [vec(p.A.a)  vec(p.A.b) vec(p.A.c)]

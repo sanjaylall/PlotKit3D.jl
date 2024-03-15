@@ -5,8 +5,6 @@ using PlotKit
 
 
 
-# define stuff here
-PlotKit.setup3d() = println("working")
 
 
 include("basic3d.jl")

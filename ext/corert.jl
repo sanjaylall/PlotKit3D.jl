@@ -6,13 +6,13 @@ using PlotKit
 using ..Basic3D: Vec3
 using ..Axes3D: Box3
 
+const pk = PlotKit
 
-abstract type Shape end
-abstract type Texture end
-
-export Shape,  Texture, Material, Grid, Uniform, Testregion
+export Material, Grid, Uniform, Testregion
 export nohit, Hitdata, gettexture
 
+const Shape = pk.Shape
+const Texture = pk.Texture
 
 # functions which which are public methods of Shape objects
 export hitnormal,  hittexture,  hitshape,  init!,   getdistancefromstripe, transform
@@ -91,14 +91,19 @@ function Material(s::Symbol)
     return Material(Color(s))
 end
 
-
-struct Uniform <: Texture
+#
+# We define the abstract type Uniform in PlotKit
+# So that there is also a constructor exported in PlotKit
+# which we can override below.
+# That way, when this extension is loaded, calling the Uniform constructor
+# calls the Uniform constructors in this file via the usual dispatch.
+struct Uniform <: pk.Uniform
     material::Material
 end
 
 # defaults
-Uniform(c::Color) = Uniform(Material(c))
-Uniform(s::Symbol) = Uniform(Material(s))
+pk.Uniform(c::Color) = Uniform(Material(c))
+pk.Uniform(s::Symbol) = Uniform(Material(s))
 
 struct Grid <: Texture
     material::Material
