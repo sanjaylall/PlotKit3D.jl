@@ -2,10 +2,11 @@
 module Demo3D
 
 using PlotKit
+using LinearAlgebra
 
 plotpath(x) = joinpath(ENV["HOME"], "plots/", x)
 
-
+eye(n) = Matrix{Float64}(I(n))
 ##############################################################################
 # for raytracing
 
@@ -34,6 +35,16 @@ function getsurf1()
         return dzdx, dzdy
     end
     return z_plh, dz_plh
+end
+
+function getsurf2()
+    oldzfun(x,y) =  3*(1-x)^2*exp(-(x^2) - (y+1)^2) - 10*(x/5 - x^3 - y^5)*exp(-x^2-y^2) - 1/3*exp(-(x+1)^2 - y^2)
+    function olddzfun(x,y)
+        dzdx = -(2/3)*exp(-2x-x*x-(1+y)^2)*(-exp(2y)*(1+x) + 9*exp(2x)*(1 - 2*x*x + x*x*x) + exp(1 + 2x + 2y)*(3 - 51x*x + 30*x^4 + 30*x*y^5))
+        dzdy =  (1/3)*exp(-2x-x*x-(1+y)^2)*(2*exp(2y)*y - 18*exp(2x)*(-1+x)^2*(1+y) -6*exp(1+2x+2y)*y*(-2x + 10*x^3 + 5*y^3*(-5+2*y*y)))
+        return dzdx, dzdy
+    end
+    return oldzfun, olddzfun
 end
 
 ##############################################################################
@@ -71,6 +82,24 @@ function main3()
     save(d, plotpath("raytrace3.pdf"))
 end
 
+
+function main4()
+    f, df = getsurf2()
+    d = surf(f, df; xmin = -3, xmax = 3, ymin = -3, ymax = 3,
+             axisoptions3_azimuth = -25, axisoptions3_elevation = atan(1/sqrt(2))*180/pi)
+
+    save(d, plotpath("raytrace4.pdf"))
+   
+end
+
+
+
+function main5()
+    ell = Ellipsoid(eye(3),[2,-2,1], Uniform(:red))
+    box = Box3(-3,3,-3,3,-3,3)
+    d = raytrace([ell], box)
+    save(d, plotpath("raytrace5.pdf"))
+end
 
 
 end
