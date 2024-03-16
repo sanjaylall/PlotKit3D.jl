@@ -4,6 +4,7 @@ module Basic3D
 using PlotKit
 using LinearAlgebra
 
+const pk = PlotKit
 export Vec3, Array33, Array32, Array23, Arrayn3, dot, normalize, vec3_hadamard, vec3_hadamarddiv
 
 struct Vec3
@@ -14,9 +15,7 @@ end
 
 eval(makevector(Vec3))
 
-println("vh = ", vec3_hadamard)
-
-
+pk.vec3(a...; kw...) = Vec3(a...; kw...)
 # 3 by 3 matrix
 struct Array33
     a::Vec3

@@ -6,30 +6,25 @@ using LinearAlgebra
 
 using ..Basic3D: Vec3, Array23, Array32, dot, vec3_hadamard, vec3_hadamarddiv
 
-const pk = PlotKit
-
-
 export Axis3, AxisMap3, Box3, Box3f, drawaxis3, ctxfromcube, axisfromcube
 export cubefromctx, ctxfromaxis, AxisOptions3
 export get_hexagon
 
+const pk = PlotKit
+
 hadamard(p::Vec3, q::Vec3) = vec3_hadamard(p,q)
 hadamarddiv(p::Vec3, q::Vec3) = vec3_hadamard_div(p,q)
 
-mutable struct Box3 <: pk.Box3
+mutable struct Box3 
     xmin
     xmax
     ymin
     ymax
     zmin
     zmax
-    #function Box3(a,b,c,d,e,f)
-    #    new(a,b,c,d,e,f)
-    #end
 end
 
-pk.Box3(a,b,c,d,e,f) = Box3(a,b,c,d,e,f)
-pk.Box3(;
+Box3(;
      xmin=missing, xmax=missing,
      ymin=missing, ymax=missing,
      zmin=missing, zmax=missing) = Box3(xmin, xmax, ymin, ymax, zmin, zmax)
@@ -44,6 +39,7 @@ function PlotKit.ifnotmissing(a::Box3, b::Box3)
                )
 end
 
+pk.box3(a...; kw...) = Box3(a...; kw...)
 
 struct Box3f
     xmin::Float64
@@ -57,6 +53,7 @@ end
 Box3f(a::Box3) = Box3f(a.xmin, a.xmax, a.ymin, a.ymax, a.zmin, a.zmax)
 Base.convert(::Type{Box3f}, x) = Box3f(x)
 Base.convert(::Type{Box3f}, x::Box3f) = x
+
 
 
 
@@ -147,12 +144,12 @@ Base.@kwdef mutable struct AxisOptions3
     drawbackground = true
     ticks = Ticks3()
     axisstyle3 = AxisStyle3()
-    tickbox = pk.Box3()
-    axisbox = pk.Box3()
+    tickbox = Box3()
+    axisbox = Box3()
     azimuth = -37.5
     elevation = 30
     scale3 = 0.7
-    cube = pk.Box3(-1,1,-1,1,-1,1)
+    cube = Box3(-1,1,-1,1,-1,1)
 end
 
 

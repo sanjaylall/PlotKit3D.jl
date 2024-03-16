@@ -11,14 +11,14 @@ const pk = PlotKit
 export Material, Grid, Uniform, Testregion
 export nohit, Hitdata, gettexture
 
-const Shape = pk.Shape
-const Texture = pk.Texture
+
 
 # functions which which are public methods of Shape objects
 export hitnormal,  hittexture,  hitshape,  init!,   getdistancefromstripe, transform
 export addlimits
 
-
+abstract type Shape end
+abstract type Texture end
 
 
 init!() = return
@@ -97,13 +97,16 @@ end
 # which we can override below.
 # That way, when this extension is loaded, calling the Uniform constructor
 # calls the Uniform constructors in this file via the usual dispatch.
-struct Uniform <: pk.Uniform
+struct Uniform <: Texture
     material::Material
 end
 
 # defaults
-pk.Uniform(c::Color) = Uniform(Material(c))
-pk.Uniform(s::Symbol) = Uniform(Material(s))
+Uniform(c::Color) = Uniform(Material(c))
+Uniform(s::Symbol) = Uniform(Material(s))
+
+pk.uniform(a...; kw...) = Uniform(a...; kw...)
+
 
 struct Grid <: Texture
     material::Material
