@@ -35,7 +35,13 @@ Base.@kwdef mutable struct SurfaceOptions
     rto = RaytraceOptions()
 end
 
-    
+
+Base.@kwdef mutable struct Raytrace
+    box
+    shapes
+    axis3
+    rto::RaytraceOptions
+end
 
 
 function pk.raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
@@ -61,9 +67,8 @@ end
 function pk.raytrace(shapes, box, rto::RaytraceOptions)
     axis3 = Axis3(box, rto.axisoptions3)
     d = Drawable(axis3.width, axis3.height)
-    drawaxis3(d.ctx, axis3)
-    raytrace(d.ctx, axis3, shapes, box, rto)
-    return d
+    rt = Raytrace(box, shapes, axis3, rto)
+    return rt
 end
 
 function parse_raytrace_options(; kw...)
@@ -80,9 +85,20 @@ end
 
 function pk.raytrace(shapes, box; kw...)
     rto = parse_raytrace_options(; kw...)
-    raytrace(shapes, box, rto)
+    axis3 = Axis3(box, rto.axisoptions3)
+    rt = raytrace(shapes, box, rto)
+    return rt
 end
 
+
+function pk.draw(rt::Raytrace)
+    d = Drawable(rt.axis3.width, rt.axis3.height)
+    drawaxis3(d.ctx, rt.axis3)
+    raytrace(d.ctx, rt.axis3, rt.shapes, rt.box, rt.rto)
+    return d
+end
+
+    
 ##############################################################################
 # surface
 

@@ -48,6 +48,24 @@ function getsurf2()
 end
 
 ##############################################################################
+
+function main()
+    main1()
+    main2()
+    main3()
+    main4()
+    main5()
+    main6()
+    main7()
+    main8()
+    main9()
+    main10()
+    main11()
+    main12()
+    main13()
+end
+    
+
 function main1()
     x = range(-6, 6, length = 101)
     y = range(-6, 6, length = 101)
@@ -58,8 +76,9 @@ function main1()
         r=(qf(x,y)-zmin)/zmax
         return  Color(r,  0.5,  0.9-r/2)
     end
-    d = mesh_height_color_fn(x, y, qf, cfun; xlineindices=3:4:100,
-         ylineindices=3:4:100, azimuth=-70, elevation=60)
+    me = mesh_height_color_fn(x, y, qf, cfun; xlineindices=3:4:100,
+                              ylineindices=3:4:100, azimuth=-70, elevation=60)
+    d = draw(me)
     save(d, plotpath("mesh1.pdf"))
 end    
 
@@ -69,7 +88,8 @@ function main2()
     x = range(-3, 3, length = 49)
     y = range(-3, 3, length = 49)
     zf(x,y) =  3*(1-x)^2*exp(-(x^2) - (y+1)^2) - 10*(x/5 - x^3 - y^5)*exp(-x^2-y^2) - 1/3*exp(-(x+1)^2 - y^2)
-    d = mesh_height_fn(x, y, zf)
+    me = mesh_height_fn(x, y, zf)
+    d = draw(me)
     save(d, plotpath("mesh2.pdf"))
 end
 
@@ -77,19 +97,20 @@ end
 
 function main3()
     f, df = getsurf1()
-    d=surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
-           axisoptions3_azimuth = -25, axisoptions3_elevation = 40)
+    rt = surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
+              axisoptions3_azimuth = -25, axisoptions3_elevation = 40)
+    d = draw(rt)
     save(d, plotpath("raytrace3.pdf"))
 end
 
 
 function main4()
     f, df = getsurf2()
-    d = surf(f, df; xmin = -3, xmax = 3, ymin = -3, ymax = 3,
-             axisoptions3_azimuth = -25, axisoptions3_elevation = atan(1/sqrt(2))*180/pi)
-
+    rt = surf(f, df; xmin = -3, xmax = 3, ymin = -3, ymax = 3,
+              axisoptions3_azimuth = -25,
+              axisoptions3_elevation = atan(1/sqrt(2))*180/pi)
+    d = draw(rt)
     save(d, plotpath("raytrace4.pdf"))
-   
 end
 
 
@@ -97,7 +118,8 @@ end
 function main5()
     ell = ellipsoid(eye(3),[2,-2,1], uniform(:red))
     box = box3(-3,3,-3,3,-3,3)
-    d = raytrace([ell], box)
+    rt = raytrace([ell], box)
+    d = draw(rt)
     save(d, plotpath("raytrace5.pdf"))
 end
 
@@ -147,7 +169,8 @@ function main6()
     
     shapes = [ poly1, poly4, ell, ell2]
     box = box3(-1,2,-3,3,-3,2)
-    d = raytrace(shapes, box;  shadows = true)
+    rt = raytrace(shapes, box;  shadows = true)
+    d = draw(rt)
     save(d, plotpath("raytrace6.pdf"))
 end
 
@@ -169,8 +192,9 @@ end
 function main7()
     # 3d peaks plot, ala Matlab
     f, df = getsurf7()
-    d=surf(f, df; xmin = -3, xmax = 3, ymin = -3, ymax = 3,
-           azimuth = -25,elevation =  atan(1/sqrt(2))*180/pi)
+    rt = surf(f, df; xmin = -3, xmax = 3, ymin = -3, ymax = 3,
+              azimuth = -25,elevation =  atan(1/sqrt(2))*180/pi)
+    d = draw(rt)
     save(d, plotpath("raytrace7.pdf"))
 end
 
@@ -189,7 +213,8 @@ function main8()
     xcenter = [1,0,1]
     b = b + A*xcenter
     poly = polytope(A, b, fill(uniform(:red), 8))
-    d = raytrace([poly], box3(-1,2,-3,3,-3,2); shadows = true)
+    rt = raytrace([poly], box3(-1,2,-3,3,-3,2); shadows = true)
+    d = draw(rt)
     save(d, plotpath("raytrace8.pdf"))
 end
 
@@ -198,7 +223,8 @@ end
 function main9()
     Z = [4.8 1.2 -3.6; 1.2 4.8 -1.4; -3.6 -1.4 4.4]
     ell = ellipsoid(Z,[0,-2,1], uniform(:red))
-    d = raytrace([ell], box3(-1,2,-3,3,-3,2) ;  shadows = true)
+    rt = raytrace([ell], box3(-1,2,-3,3,-3,2) ;  shadows = true)
+    d = draw(rt)
     save(d, plotpath("raytrace9.pdf"))
 end
 
@@ -222,7 +248,8 @@ end
 function main10()
     f, df = gettv()
     arb = arbitrarysolid(f, df, 1e-3, uniform(:red), uniform(:green))
-    d = raytrace([arb], box3(-1,2,-3,3,-3,2); shadows = true)
+    rt = raytrace([arb], box3(-1,2,-3,3,-3,2); shadows = true)
+    d = draw(rt)
     save(d, plotpath("raytrace10.pdf"))
 end
 
@@ -230,9 +257,10 @@ end
 # high res
 function main11()
     f, df = getsurf1()
-    d=surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
-           raytrace_renderwidth = 1600, raytrace_renderheight = 1200,
-           axisoptions3_azimuth = -25, axisoptions3_elevation = 40)
+    rt = surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
+              raytrace_renderwidth = 1600, raytrace_renderheight = 1200,
+              axisoptions3_azimuth = -25, axisoptions3_elevation = 40)
+    d = draw(rt)
     save(d, plotpath("raytrace11.pdf"))
 end
 
@@ -240,14 +268,37 @@ end
 # aspect ratio
 function main12()
     f, df = getsurf1()
-    d=surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
+    rt = surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
            axisoptions3_azimuth = -25, axisoptions3_elevation = 40,
            raytrace_renderwidth = 1600, raytrace_renderheight = 1200,
            axisoptions3_cube = box3(-2,2, -2,2, -1, 1), axisoptions3_scale3=0.5
-           )
+              )
+    d = draw(rt)
     save(d, plotpath("raytrace12.pdf"))
 end
 
+# simple plane
+function main13()
+    # plot a'x = 0
+    a = [3, 2, 1]
+    c1 = -a[1]/a[3]
+    c2 = -a[2]/a[3]
+   
+    f(x, y) =  c1*x + c2*y
+    df(x, y) = c1, c2
+
+    rt=surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
+           axisoptions3_azimuth = -25, axisoptions3_elevation = 40,
+           raytrace_renderwidth = 1600, raytrace_renderheight = 1200,
+           axisoptions3_cube = box3(-2,2, -2,2, -1, 1), axisoptions3_scale3=0.5
+            )
+    d = draw(rt)
+    save(d, plotpath("raytrace13.pdf"))
+end
+
+
+
+    
 
 end
 

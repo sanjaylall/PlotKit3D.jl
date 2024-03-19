@@ -16,6 +16,13 @@ using ..Axes3D: Axis3, Box3, Box3f, drawaxis3, ctxfromaxis
 ##############################################################################
 
 
+Base.@kwdef mutable struct Mesh
+    axis3
+    x
+    y
+    Z
+    cfun
+end
 
 ##############################################################################
 
@@ -93,14 +100,18 @@ boundingbox3(x,y,z) = Box3(minimum(x), maximum(x),
                            minimum(z), maximum(z))
 
 
-
-function PlotKit.mesh(x, y, Z, cfun; patchcolor = [0.8,0.8,1], kwargs...)
-    b = boundingbox3(x,y,Z)
-    axis3 = Axis3(b; kwargs...)
-    d = Drawable(axis3.width, axis3.height)
-    drawaxis3(d.ctx, axis3)
-    mesh(d.ctx, axis3, x, y, Z, cfun; kwargs...)
+function PlotKit.draw(me::Mesh; kw...)
+    d = Drawable(me.axis3.width, me.axis3.height)
+    drawaxis3(d.ctx, me.axis3)
+    mesh(d.ctx, me.axis3, me.x, me.y, me.Z, me.cfun; kw...)
     return d
+end
+
+function PlotKit.mesh(x, y, Z, cfun; kwargs...)
+    b = boundingbox3(x, y, Z)
+    axis3 = Axis3(b; kwargs...)
+    me = Mesh(axis3, x, y, Z, cfun)
+    return me
 end
 
 
