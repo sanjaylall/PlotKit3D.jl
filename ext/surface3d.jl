@@ -10,6 +10,8 @@ using ..RTloop: Lighting
 using ..RayTracer: Camera, raytrace_main
 using ..RTcairo: cairoimagefrommatrix
 
+export Surface, SurfaceOptions, parse_raytrace_options
+
 const pk = PlotKit
 
 Base.@kwdef mutable struct RaytraceOptions

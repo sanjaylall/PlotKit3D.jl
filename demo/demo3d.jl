@@ -280,20 +280,45 @@ end
 # simple plane
 function main13()
     # plot a'x = 0
-    a = [3, 2, 1]
+    a = -2*[-0.3, 0.3, -1]
     c1 = -a[1]/a[3]
     c2 = -a[2]/a[3]
    
     f(x, y) =  c1*x + c2*y
     df(x, y) = c1, c2
 
-    rt=surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
-           axisoptions3_azimuth = -25, axisoptions3_elevation = 40,
-           raytrace_renderwidth = 1600, raytrace_renderheight = 1200,
-           axisoptions3_cube = box3(-2,2, -2,2, -1, 1), axisoptions3_scale3=0.5
-            )
+    w = 6
+    so = pk3d().SurfaceOptions(;xmin = -w, xmax = w, ymin = -w, ymax = w,
+                               zmin = -w, zmax = w)
+    rto = pk3d().parse_raytrace_options(; 
+                                        axisoptions3_azimuth = -25,
+                                        axisoptions3_elevation = 40,
+                                        renderwidth = 1600,
+                                        renderheight = 1600,
+                                        axisoptions3_cube = box3(-1,1, -1,1, -1,1),
+                                        axisoptions3_scale3=0.72
+                                        )
+    b3 = box3(so.xmin, so.xmax, so.ymin, so.ymax, so.zmin, so.zmax)
+
+    t1 = pk3d().Grid(pk3d().Material(:red), pk3d().Material(:white), 0.02, 1/3, 1/3)
+    t2 = pk3d().Grid(pk3d().Material(:red), pk3d().Material(:white), 0.02, 1/3, 1/3)
+
+    surface = pk3d().Surface(f, df; so.sampleheight, so.samplegradient,
+                      texture1=t1, texture2=t2)
+    rt = raytrace([surface], b3, rto)
     d = draw(rt)
+
+    am3 = rt.axis3.axismap3
+    f(q)  = pk3d().ctxfromaxis(am3, q)
+    v3(x,y,z) = pk3d().Vec3(x, y, z)
+    circle(d.ctx, f(v3(0,0,0)), 3; fillcolor = Color(:black))
+    arrow = TriangularArrow(size = 5, fillcolor = Color(:white))
+    arrows = ((1, arrow),)
+    p = Path(; arrows, points = [f(v3(0,0,0)), f(v3(a...))])
+    draw(d, p)
+
     save(d, plotpath("raytrace13.pdf"))
+    return rt
 end
 
 

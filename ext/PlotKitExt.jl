@@ -66,7 +66,7 @@ reexport(RayTracer)
 reexport(Surface3D)
 reexport(RTcairo)
 
-
+PlotKit.pk3d() = @__MODULE__
 
 
 end
