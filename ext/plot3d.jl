@@ -5,7 +5,7 @@ using PlotKit
 
 #export mesh, mesh_height_color_fn, mesh_height_fn
 
-
+export Mesh
 using Cairo
 
 using ..Basic3D: Vec3, Array23, Array32, Array33, dot
@@ -102,6 +102,7 @@ boundingbox3(x,y,z) = Box3(minimum(x), maximum(x),
 
 function PlotKit.draw(me::Mesh; kw...)
     d = Drawable(me.axis3.width, me.axis3.height)
+#    drawaxis(d.ctx, me.axis3.ax2)
     drawaxis3(d.ctx, me.axis3)
     mesh(d.ctx, me.axis3, me.x, me.y, me.Z, me.cfun; kw...)
     return d
@@ -121,16 +122,20 @@ function extra_mesh(x, y, Z; patchcolor = [0.8,0.8,1], kwargs...)
     mesh(x, y, Z, cfun; kwargs...)
 end
 
-
-
-# accepts height and color functions
-function PlotKit.mesh_height_color_fn(x, y, f::Function, cfun::Function; kwargs...)
+function PlotKit.sample_mesh(x, y, f)
     Z = zeros(length(x), length(y))
     for xi in 1:length(x)
         for yi in 1:length(y)
             Z[xi,yi] = f(x[xi],y[yi])
         end
     end
+    return Z
+end
+
+
+# accepts height and color functions
+function PlotKit.mesh_height_color_fn(x, y, f::Function, cfun::Function; kwargs...)
+    Z = sample_mesh(x, y, f)
     mesh(x, y, Z, cfun; kwargs...)
 end
 

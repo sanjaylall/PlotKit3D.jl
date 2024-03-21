@@ -322,6 +322,53 @@ function main13()
 end
 
 
+# simple plane, non-raytrace
+function main14()
+    # plot a'x = 0
+    a = -4*[-0.3, 0.3, -1]
+    c1 = -a[1]/a[3]
+    c2 = -a[2]/a[3]
+    gs(v) = v - a*(a'*v)/(norm(a)^2)
+    v1 = gs(2*[2.5,-2.5,0])
+    v2 = gs(2*[1,2,0])
+    
+    
+    f(x, y) =  c1*x + c2*y
+    cfun(i,j) = Color(0.8,0.8,1)
+    w = 6
+    x = range(-w, w, step = 2)
+    y = range(-w, w, step = 2)
+
+    Z = sample_mesh(x, y, f)
+    b3 = box3(-w, w, -w, w, -w, w)
+    axis3 = pk3d().Axis3(b3; width = 600, height = 600,
+                         azimuth = -25, elevation = 40,
+                         windowbackgroundcolor = Color(:white),
+                         drawbackground = false,
+                         axisstyle3_axisbackgroundcolor = Color(0.9176, 0.9176, 0.95),
+                         axisstyle3_gridlinestyle = LineStyle(0.8 * Color(:white), 1)
+                         )
+    rt = pk3d().Mesh(axis3, x, y, Z, cfun)
+    d = draw(rt)
+
+    am3 = rt.axis3.axismap3
+    f(q)  = pk3d().ctxfromaxis(am3, q)
+    v3(x) = pk3d().Vec3(x[1], x[2], x[3])
+    function drawvec(v, c)
+        arrow = TriangularArrow(size = 8, fillcolor = c)
+        arrows = ((1, arrow),)
+        p = Path(; arrows, points = [f(v3([0,0,0])), f(v3(v))], linestyle = LineStyle(c, 1) )
+        draw(d, p)
+    end
+    drawvec(a, Color(:blue))
+    drawvec(v1, Color(:red))
+    drawvec(v2, Color(:red))
+    circle(d.ctx, f(v3([0,0,0])), 2; fillcolor = Color(:black))
+
+    save(d, plotpath("raytrace14.pdf"))
+    return rt
+end
+
 
     
 
