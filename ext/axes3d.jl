@@ -39,7 +39,7 @@ function PlotKit.ifnotmissing(a::Box3, b::Box3)
                )
 end
 
-pk.box3(a...; kw...) = Box3(a...; kw...)
+#box3(a...; kw...) = Box3(a...; kw...)
 
 struct Box3f
     xmin::Float64

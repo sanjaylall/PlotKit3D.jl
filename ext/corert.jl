@@ -105,7 +105,7 @@ end
 Uniform(c::Color) = Uniform(Material(c))
 Uniform(s::Symbol) = Uniform(Material(s))
 
-pk.uniform(a...; kw...) = Uniform(a...; kw...)
+#uniform(a...; kw...) = Uniform(a...; kw...)
 
 
 struct Grid <: Texture

@@ -15,7 +15,8 @@ end
 
 eval(makevector(Vec3))
 
-pk.vec3(a...; kw...) = Vec3(a...; kw...)
+#vec3(a...; kw...) = Vec3(a...; kw...)
+
 # 3 by 3 matrix
 struct Array33
     a::Vec3

@@ -8,6 +8,7 @@ using ..Basic3D: Vec3, Array23, Array32, Array33
 using ..Axes3D: Box3, Box3f
 using ..CoreRT: Texture, Shape, CoreRT, nohit, Hitdata, gettexture
 
+export Ellipsoid
 
 const pk = PlotKit
 
@@ -41,7 +42,7 @@ end
 Ellipsoid(A, q, texture::S) where {S<:Texture} = Ellipsoid{S}(A, q, texture)
 Ellipsoid(A::Array{T}, q, texture::S) where {T<:Number, S<:Texture} = Ellipsoid{S}(Array33(A), q, texture)
 
-pk.ellipsoid(a...) = Ellipsoid(a...)
+#ellipsoid(a...) = Ellipsoid(a...)
 
 function getparams(p::Ellipsoid)
     A = [vec(p.A.a)  vec(p.A.b) vec(p.A.c)]
@@ -124,7 +125,7 @@ mutable struct ArbitrarySolid{S1<:Texture,S2<:Texture} <: Shape
     texture2::S2
 end
 
-pk.arbitrarysolid(a...; kw...) = ArbitrarySolid(a...; kw...)
+#arbitrarysolid(a...; kw...) = ArbitrarySolid(a...; kw...)
 
 function intersectarbitrary(s::ArbitrarySolid, o::Vec3, d::Vec3,  tmin::Float64, tmax::Float64)
     t = tmin
@@ -224,7 +225,7 @@ Polytope(A, b, textures::Array{S,1}) where {S<:Texture} = Polytope{S}(A,b,textur
 # Convert from sing Matrix form to faster Vec3 representation
 Polytope(A::Matrix{T}, b, textures::Array{S,1}) where {T <: Number, S<:Texture} = Polytope(Vec3[z[:] for z in eachrow(A)], b, textures)
 
-pk.polytope(a...; kw...) = Polytope(a...; kw...)
+#polytope(a...; kw...) = Polytope(a...; kw...)
 
 function getparams(p::Polytope)
     # convert to usual matrix form

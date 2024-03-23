@@ -66,7 +66,10 @@ reexport(RayTracer)
 reexport(Surface3D)
 reexport(RTcairo)
 
-PlotKit.pk3d() = @__MODULE__
+#PlotKit.pk3d() = @__MODULE__
+function __init__()
+    PlotKit.extensions[Symbol(@__MODULE__)] = @__MODULE__
+end
 
 
 end

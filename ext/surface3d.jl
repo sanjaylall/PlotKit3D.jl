@@ -10,7 +10,7 @@ using ..RTloop: Lighting
 using ..RayTracer: Camera, raytrace_main
 using ..RTcairo: cairoimagefrommatrix
 
-export Surface, SurfaceOptions, parse_raytrace_options
+export Surface, SurfaceOptions, parse_raytrace_options, raytrace, surf
 
 const pk = PlotKit
 
@@ -46,7 +46,7 @@ Base.@kwdef mutable struct Raytrace
 end
 
 
-function pk.raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
+function raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
     renderwidth = ifnotmissing(rto.renderwidth, axis3.width)
     renderheight = ifnotmissing(rto.renderheight, axis3.height)
     camera = Camera(axis3.axismap3, axis3.width, axis3.height, renderwidth, renderheight)
@@ -66,7 +66,7 @@ function pk.raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
 end
 
 
-function pk.raytrace(shapes, box, rto::RaytraceOptions)
+function raytrace(shapes, box, rto::RaytraceOptions)
     axis3 = Axis3(box, rto.axisoptions3)
     d = Drawable(axis3.width, axis3.height)
     rt = Raytrace(box, shapes, axis3, rto)
@@ -85,7 +85,7 @@ function parse_raytrace_options(; kw...)
 end
 
 
-function pk.raytrace(shapes, box; kw...)
+function raytrace(shapes, box; kw...)
     rto = parse_raytrace_options(; kw...)
     axis3 = Axis3(box, rto.axisoptions3)
     rt = raytrace(shapes, box, rto)
@@ -93,7 +93,7 @@ function pk.raytrace(shapes, box; kw...)
 end
 
 
-function pk.draw(rt::Raytrace)
+function PlotKit.draw(rt::Raytrace)
     d = Drawable(rt.axis3.width, rt.axis3.height)
     drawaxis3(d.ctx, rt.axis3)
     raytrace(d.ctx, rt.axis3, rt.shapes, rt.box, rt.rto)
@@ -125,7 +125,7 @@ function getlimitsfromfn(box2, zfun::Function)
 end
 
 
-function PlotKit.surf(zfun, dzfun; kw...)
+function surf(zfun, dzfun; kw...)
     so = SurfaceOptions()
     setoptions!(so, "", kw...)
     setoptions!(so.rto, "raytrace_", kw...)
