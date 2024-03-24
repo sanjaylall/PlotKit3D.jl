@@ -120,7 +120,7 @@ mutable struct Axis3
     ticks3::Ticks3
     as3::AxisStyle3
     windowbackgroundcolor
-    drawbackground
+    drawwindowbackground
 end
 
 
@@ -274,10 +274,10 @@ Axis3(; kw...) = Axis3(missing; kw...)
 
 
 function drawaxis3(ctx, axis3::Axis3)
-    if axis3.drawbackground
-        rect(ctx, Point(0,0), Point(axis3.width, axis3.height);
-             fillcolor=axis3.windowbackgroundcolor)
-    end
+   # if axis3.drawwindowbackground
+   #     rect(ctx, Point(0,0), Point(axis3.width, axis3.height);
+   #          fillcolor=axis3.windowbackgroundcolor)
+   # end
     drawaxis3(ctx, axis3.axismap3, axis3.ax2, axis3.box3, axis3.ticks3,
               axis3.as3)
 end
@@ -366,6 +366,10 @@ cubefromctx(a::AxisMap3, q::Point) = a.projectorinv * a.axis.ax.finv(q)
 ctxfromcube(a::AxisMap3, q::Vec3) = a.axis.ax(a.projector * q)
 
 ctxfromaxis(a::AxisMap3, q::Vec3) = ctxfromcube(a, cubefromaxis(a, q))
+
+(a::AxisMap3)(p::Vec3) = ctxfromaxis(a, p)
+(a::AxisMap3)(plist::Array{Vec3}) = a.(plist)
+
 
 function get_hexagon(axismap3)
     f(xa, ya, za)  = ctxfromcube(axismap3, Vec3(xa, ya, za))

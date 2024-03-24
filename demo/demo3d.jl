@@ -350,7 +350,7 @@ function main14()
                          axisstyle3_axisbackgroundcolor = Color(0.9176, 0.9176, 0.95),
                          axisstyle3_gridlinestyle = LineStyle(0.8 * Color(:white), 1)
                          )
-    rt = pk3.Mesh(axis3, x, y, Z, cfun)
+    rt = pk3.Mesh(; axis3, x, y, Z, cfun)
     d = draw(rt)
 
     am3 = rt.axis3.axismap3

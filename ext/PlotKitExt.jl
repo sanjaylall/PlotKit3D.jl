@@ -13,6 +13,9 @@ using .Basic3D
 include("axes3d.jl")
 using .Axes3D
 
+include("axisdrawables3d.jl")
+using .AxisDrawables3D
+
 include("plot3d.jl")
 using .Plot3D
 
@@ -55,6 +58,7 @@ end
 
 reexport(Basic3D)
 reexport(Axes3D)
+reexport(AxisDrawables3D)
 reexport(Plot3D)
 reexport(CoreRT)
 reexport(Shapes)
