@@ -21,12 +21,11 @@ Base.@kwdef mutable struct Mesh
     x
     y
     Z
-    cfun = nothing
+    patchcolor = Color(0.8, 0.8, 1.0)
     linecolor = Color(:black)
     linewidth = 0.3
     xlineindices = nothing
     ylineindices = nothing
-    patchcolor = Color(0.8,0.8,1)
 end
 
 ##############################################################################
@@ -34,6 +33,8 @@ end
 ifnotnothing(x::Nothing, y) = y
 ifnotnothing(x, y) = x
 
+atij(i, j, f::Function) = f(i,j)
+atij(i, j, f) = f
 
 # cfun is a function, mapping (x,y) to color of patch
 function drawmesh(ad::AxisDrawable3, me::Mesh)
@@ -41,8 +42,6 @@ function drawmesh(ad::AxisDrawable3, me::Mesh)
     y = me.y
     Z = me.Z
 
-    defaultcfun(a, b) = me.patchcolor
-    cfun = ifnotnothing(me.cfun, defaultcfun)
     xlineindices = ifnotnothing(me.xlineindices, 1:size(Z,1))
     ylineindices = ifnotnothing(me.ylineindices, 1:size(Z,2))
 
@@ -63,7 +62,7 @@ function drawmesh(ad::AxisDrawable3, me::Mesh)
         i = p[5]
         j = p[6]
 
-        patchcolor = cfun(x[i], y[j])
+        patchcolor = atij(x[i], y[j], me.patchcolor)
 
         Cairo.set_line_cap(ad.ctx, Cairo.CAIRO_LINE_CAP_SQUARE)
         Cairo.set_line_join(ad.ctx, Cairo.CAIRO_LINE_JOIN_BEVEL)
@@ -91,15 +90,18 @@ function PlotKit.draw(me::Mesh; kw...)
     return ad
 end
 
-function Mesh(x, y, Z; axis3 = nothing, kw...)
+# f may be a function or a matrix
+function Mesh(x, y, f; axis3 = nothing, kw...)
+    Z = sample_mesh(x, y, f)
     b = boundingbox3(x, y, Z)
     axis3 = ifnotnothing(axis3, Axis3(b; kw...))
     me = Mesh(; axis3, x, y, Z,  allowed_kws(Mesh, kw)...)
     return me
 end
 
+sample_mesh(x, y, Z) = Z
 
-function sample_mesh(x, y, f)
+function sample_mesh(x, y, f::Function)
     Z = zeros(length(x), length(y))
     for xi in 1:length(x)
         for yi in 1:length(y)
@@ -111,16 +113,16 @@ end
 
 
 # accepts height and color functions
-function mesh_height_color_fn(x, y, f::Function, cfun::Function; kwargs...)
-    Z = sample_mesh(x, y, f)
-    Mesh(x, y, Z; cfun, kwargs...)
-end
+#function mesh_height_color_fn(x, y, f::Function, cfun::Function; kwargs...)
+#    Z = sample_mesh(x, y, f)
+#    Mesh(x, y, Z; cfun, kwargs...)
+#end
 
 # accepts a function instead of a Z matrix
-function mesh_height_fn(x, y, f::Function; patchcolor = Color(0.8,0.8,1), kwargs...)
-    cfun(i,j) = patchcolor
-    mesh_height_color_fn(x, y, f, cfun; kwargs...)
-end
+#function mesh_height_fn(x, y, f::Function; patchcolor = Color(0.8,0.8,1), kwargs...)
+#    cfun(i,j) = patchcolor
+#    mesh_height_color_fn(x, y, f, cfun; kwargs...)
+#end
 
 ##############################################################################    
 

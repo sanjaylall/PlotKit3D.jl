@@ -49,10 +49,10 @@ Base.@kwdef mutable struct AxisRecorderDrawable3 <: AxisDrawable3
 end
 
 
-PlotKitCairo.Drawable(ad::AxisImageDrawable3) = ImageDrawable3(ad.surface, ad.ctx, ad.width, ad.height, ad.fname)
-PlotKitCairo.Drawable(ad::AxisPDFDrawable3) = PDFDrawable3(ad.surface, ad.ctx, ad.width, ad.height, ad.fname)
-PlotKitCairo.Drawable(ad::AxisSVGDrawable3) = SVGDrawable3(ad.surface, ad.ctx, ad.width, ad.height, ad.fname)
-PlotKitCairo.Drawable(ad::AxisRecorderDrawable3) = RecorderDrawable3(ad.surface, ad.ctx, ad.width, ad.height)
+PlotKitCairo.Drawable(ad::AxisImageDrawable3) = ImageDrawable(ad.surface, ad.ctx, ad.width, ad.height, ad.fname)
+PlotKitCairo.Drawable(ad::AxisPDFDrawable3) = PDFDrawable(ad.surface, ad.ctx, ad.width, ad.height, ad.fname)
+PlotKitCairo.Drawable(ad::AxisSVGDrawable3) = SVGDrawable(ad.surface, ad.ctx, ad.width, ad.height, ad.fname)
+PlotKitCairo.Drawable(ad::AxisRecorderDrawable3) = RecorderDrawable(ad.surface, ad.ctx, ad.width, ad.height)
 
 
 
@@ -130,8 +130,15 @@ PlotKitCairo.linear_pattern(ad::AxisDrawable3, p1::Vec3, p2::Vec3) = PlotKitCair
 PlotKitCairo.line(ad::AxisDrawable3, p::Vec3, q::Vec3, args...; kwargs...) = line(ad.ctx, ad.axis3.axismap3(p), ad.axis3.axismap3(q), args...; kwargs...)
 
 
+##############################################################################
+# this depends on PlotKitDiagrams
 
 
+function PlotKit.draw(ad::AxisDrawable3, x::Vec3, dir::Vec3, arrow::TriangularArrow)
+    f(q)  = ad.axis3.axismap3(q)
+    dir2 = f(dir) - f(Vec3(0,0,0)) # direction in ctx coords
+    draw(Drawable(ad), f(x), dir2, arrow)
+end
 
 
 end
