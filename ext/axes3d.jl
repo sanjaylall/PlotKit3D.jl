@@ -103,6 +103,7 @@ Base.@kwdef mutable struct AxisStyle3
     drawaxisedges = true
     gridlinestyle = LineStyle(0.87 * Color(:white), 1)
     fontsize = 10
+    fontname = "Sans"
     xtickoffset = nothing
     ytickoffset = nothing
     ztickoffset = nothing
@@ -522,7 +523,9 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
         xt = xticks[i]
         pos = cubefromaxis(axismap3, Vec3(xt, ynear, zfar)) + xtickoffset
         text(ctx, ctxfromcube(axismap3, pos),
-             as3.fontsize, as3.fontcolor, xtickstrings[i]; horizontal = "center")
+             as3.fontsize, as3.fontcolor, xtickstrings[i];
+             fname = as3.fontname,
+             horizontal = "center")
         exttickline(Vec3(xt, ynear, zfar), 0.4*xtickoffset)
     end
     
@@ -531,6 +534,7 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
         pos = cubefromaxis(axismap3, Vec3(xnear, yt, zfar)) + ytickoffset
         text(ctx, ctxfromcube(axismap3, pos),
              as3.fontsize, as3.fontcolor, ytickstrings[i];
+             fname = as3.fontname,
              horizontal = "center", vertical = "center")
         exttickline(Vec3(xnear, yt, zfar), 0.4*ytickoffset)
     end
@@ -540,6 +544,7 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
         pos = cubefromaxis(axismap3, Vec3(zaxis_x, zaxis_y, zt)) + ztickoffset
         text(ctx, ctxfromcube(axismap3, pos),
              as3.fontsize, as3.fontcolor, ztickstrings[i];
+             fname = as3.fontname,
              vertical = "center", horizontal = "right")
         exttickline(Vec3(zaxis_x, zaxis_y, zt), 0.4*ztickoffset)
     end
