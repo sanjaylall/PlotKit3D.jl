@@ -80,7 +80,6 @@ struct Material
 end
 
 # defaults
-Material(c::Color) = Material(c, 0.4, 0.45, 0.35, 8, 0.0, 0.0)
 function Material(s::Symbol)
     if s == :black
         return Material(Color(:white), 0.0, 0.0, 0.0, 0, 0.0, 0.0)
@@ -90,6 +89,8 @@ function Material(s::Symbol)
     end
     return Material(Color(s))
 end
+Material(c::Color) = Material(c, 0.4, 0.45, 0.35, 8, 0.0, 0.0)
+
 
 #
 # We define the abstract type Uniform in PlotKit

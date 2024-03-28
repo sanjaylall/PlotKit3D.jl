@@ -12,6 +12,9 @@ export get_hexagon
 
 const pk = PlotKit
 
+ifnotnothing(x::Nothing, y) = y
+ifnotnothing(x, y) = x
+
 hadamard(p::Vec3, q::Vec3) = vec3_hadamard(p,q)
 hadamarddiv(p::Vec3, q::Vec3) = vec3_hadamard_div(p,q)
 
@@ -108,6 +111,16 @@ Base.@kwdef mutable struct AxisStyle3
     ytickoffset = nothing
     ztickoffset = nothing
     fontcolor = Color(:black)
+    labelfontsize = nothing
+    labelfontname = nothing
+    labelfontcolor = nothing
+    xlabel = "x"
+    xlabeloffset = nothing
+    ylabel = "y"
+    ylabeloffset = nothing
+    zlabel = "z"
+    zlabeloffset = nothing
+    
 end
 #
 # we use this to draw the window, in addition to the axis.
@@ -230,16 +243,18 @@ end
 # databox defines the minimum area which the ticks
 # are guaranteed to contain.
 function Axis3(databox::Box3, ao3::AxisOptions3)
+    #println("databox = ", databox)
+    #println("ao3.tickbox = ", ao3.tickbox)
 
     tickbox = ifnotmissing(ao3.tickbox, databox)
-
+    #println("tickbox = ", tickbox)
     ticks3 = ifnotmissing(ao3.ticks, Ticks3(tickbox,
                                             ao3.xidealnumlabels,
                                             ao3.yidealnumlabels,
                                             ao3.zidealnumlabels))
                           
     axisbox3 = ifnotmissing(ao3.axisbox, get_tick_extents3(ticks3))
-
+    #println("axisbox3 = ", axisbox3)
     
     axis2 = Axis(; axisequal = true,
                  width = ao3.width, height = ao3.height,
@@ -275,10 +290,10 @@ Axis3(; kw...) = Axis3(missing; kw...)
 
 
 function drawaxis3(ctx, axis3::Axis3)
-   # if axis3.drawwindowbackground
-   #     rect(ctx, Point(0,0), Point(axis3.width, axis3.height);
-   #          fillcolor=axis3.windowbackgroundcolor)
-   # end
+    # if axis3.drawwindowbackground
+    #     rect(ctx, Point(0,0), Point(axis3.width, axis3.height);
+    #          fillcolor=axis3.windowbackgroundcolor)
+    # end
     drawaxis3(ctx, axis3.axismap3, axis3.ax2, axis3.box3, axis3.ticks3,
               axis3.as3)
 end
@@ -500,10 +515,14 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
 
 
     if isnothing(as3.xtickoffset) 
-        xtickoffset = Vec3(0, sign(ynear-yfar)*0.15, 0)
+        xtickoffset = Vec3(0, sign(ynear-yfar)*0.25, 0)
+    else
+        xtickoffset = as3.xtickoffset 
     end
     if isnothing(as3.ytickoffset)
         ytickoffset = Vec3(sign(xnear-xfar)*0.15, 0, 0)
+    else
+        ytickoffset = as3.ytickoffset
     end
     if isnothing(as3.ztickoffset)
         # now we choose ticks on z-axis to be in horizontal plane
@@ -514,6 +533,8 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
             # offset in x direction
             ztickoffset = Vec3(-0.12*sign(xnear-xfar), 0, 0)
         end
+    else
+        ztickoffset = as3.ztickoffset
     end
 
     
@@ -549,7 +570,34 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
         exttickline(Vec3(zaxis_x, zaxis_y, zt), 0.4*ztickoffset)
     end
 
+    # draw the labels
+    labelfontcolor = ifnotnothing(as3.labelfontcolor, as3.fontcolor)
+    labelfontsize  = ifnotnothing(as3.labelfontsize, as3.fontsize)
+    labelfontname  = ifnotnothing(as3.labelfontname, as3.fontname)
 
+    xlabeloffset   = ifnotnothing(as3.xlabeloffset,  xtickoffset * 2)
+    xt = (box.xmax + box.xmin)/2
+    pos = cubefromaxis(axismap3, Vec3(xt, ynear, zfar)) + xlabeloffset
+    text(ctx, ctxfromcube(axismap3, pos),
+         labelfontsize, labelfontcolor, as3.xlabel;
+         fname = labelfontname,
+         horizontal = "center")
+    
+    ylabeloffset   = ifnotnothing(as3.ylabeloffset,  ytickoffset * 2)
+    yt = (box.ymax + box.ymin)/2
+    pos = cubefromaxis(axismap3, Vec3(xnear, yt, zfar)) + ylabeloffset
+    text(ctx, ctxfromcube(axismap3, pos),
+         labelfontsize, labelfontcolor, as3.ylabel;
+         fname = labelfontname,
+         horizontal = "center", vertical = "center")
+
+    zlabeloffset   = ifnotnothing(as3.zlabeloffset,  ztickoffset * 3)
+    zt = (box.zmax + box.zmin)/2
+    pos = cubefromaxis(axismap3, Vec3(zaxis_x, zaxis_y, zt)) + zlabeloffset
+    text(ctx, ctxfromcube(axismap3, pos),
+         labelfontsize, labelfontcolor, as3.zlabel;
+         fname = labelfontname,
+         vertical = "center", horizontal = "right")
 
 end
 

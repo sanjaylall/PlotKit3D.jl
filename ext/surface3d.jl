@@ -9,6 +9,7 @@ using ..ShapeSurface: Surface
 using ..RTloop: Lighting
 using ..RayTracer: Camera, raytrace_main
 using ..RTcairo: cairoimagefrommatrix
+using ..AxisDrawables3D: AxisDrawable3
 
 export Surface, SurfaceOptions, parse_raytrace_options, raytrace, surf
 
@@ -46,7 +47,7 @@ Base.@kwdef mutable struct Raytrace
 end
 
 
-function raytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
+function drawraytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
     renderwidth = ifnotmissing(rto.renderwidth, axis3.width)
     renderheight = ifnotmissing(rto.renderheight, axis3.height)
     camera = Camera(axis3.axismap3, axis3.width, axis3.height, renderwidth, renderheight)
@@ -73,14 +74,19 @@ function raytrace(shapes, box, rto::RaytraceOptions)
     return rt
 end
 
-function parse_raytrace_options(; kw...)
-    rto = RaytraceOptions()
-    setoptions!(rto, "", kw...)
+function extra_raytrace_options!(rto; kw...)
     setoptions!(rto.axisoptions3, "axisoptions3_", kw...)
     setoptions!(rto.axisoptions3.tickbox, "tickbox_", kw...)
     setoptions!(rto.axisoptions3.axisbox, "axisbox_", kw...)
     setoptions!(rto.axisoptions3.ticks, "ticks_", kw...)
     setoptions!(rto.axisoptions3.axisstyle3, "axisstyle3_", kw...)
+end
+    
+    
+function parse_raytrace_options(; kw...)
+    rto = RaytraceOptions()
+    setoptions!(rto, "", kw...)
+    extra_raytrace_options!(rto; kw...)
     return rto
 end
 
@@ -93,11 +99,18 @@ function raytrace(shapes, box; kw...)
 end
 
 
+#function PlotKit.draw(rt::Raytrace)
+#    d = Drawable(rt.axis3.width, rt.axis3.height)
+#    drawaxis3(d.ctx, rt.axis3)
+#    drawraytrace(d.ctx, rt.axis3, rt.shapes, rt.box, rt.rto)
+#    return d
+#end
+
 function PlotKit.draw(rt::Raytrace)
-    d = Drawable(rt.axis3.width, rt.axis3.height)
-    drawaxis3(d.ctx, rt.axis3)
-    raytrace(d.ctx, rt.axis3, rt.shapes, rt.box, rt.rto)
-    return d
+    ad = AxisDrawable3(rt.axis3)
+    drawaxis3(ad)
+    drawraytrace(ad.ctx, rt.axis3, rt.shapes, rt.box, rt.rto)
+    return ad
 end
 
     
@@ -129,17 +142,14 @@ function surf(zfun, dzfun; kw...)
     so = SurfaceOptions()
     setoptions!(so, "", kw...)
     setoptions!(so.rto, "raytrace_", kw...)
-    setoptions!(so.rto.axisoptions3, "axisoptions3_", kw...)
-    setoptions!(so.rto.axisoptions3.tickbox, "tickbox_", kw...)
-    setoptions!(so.rto.axisoptions3.axisbox, "axisbox_", kw...)
-    setoptions!(so.rto.axisoptions3.ticks, "ticks_", kw...)
-    setoptions!(so.rto.axisoptions3.axisstyle3, "axisstyle3_", kw...)
+    extra_raytrace_options!(so.rto; kw...)
+
     box2 = getbox(so)
     if ismissing(so.zmin) || ismissing(so.zmax)
         computed_zmin, computed_zmax = getlimitsfromfn(box2, zfun)
+        so.zmin = ifnotmissing(so.zmin, computed_zmin)
+        so.zmax = ifnotmissing(so.zmax, computed_zmax)
     end
-    so.zmin = ifnotmissing(so.zmin, computed_zmin)
-    so.zmax = ifnotmissing(so.zmax, computed_zmax)
     box3 = Box3(so.xmin, so.xmax, so.ymin, so.ymax, so.zmin, so.zmax)
     surface = Surface(zfun, dzfun; so.sampleheight, so.samplegradient,
                       so.texture1, so.texture2)
