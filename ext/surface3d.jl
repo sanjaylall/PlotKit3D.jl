@@ -11,7 +11,7 @@ using ..RayTracer: Camera, raytrace_main
 using ..RTcairo: cairoimagefrommatrix
 using ..AxisDrawables3D: AxisDrawable3
 
-export Surface, SurfaceOptions, parse_raytrace_options, raytrace, surf
+export Surface, SurfaceOptions, parse_raytrace_options, raytrace, surf, drawraytrace
 
 const pk = PlotKit
 

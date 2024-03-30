@@ -8,7 +8,7 @@ using ..Axes3D: Box3
 
 const pk = PlotKit
 
-export Material, Grid, Uniform, Testregion
+export Material, Grid, Uniform, Testregion, LevelCurves
 export nohit, Hitdata, gettexture
 
 
@@ -122,6 +122,30 @@ Grid(smat::S, gmat::T) where {S <:Material, T<:Material} = Grid(smat, gmat, 0.01
 Grid(s, g) = Grid(Material(s), Material(g))
 Grid(s) = Grid(Material(s), Material(:black))
 
+
+
+
+struct LevelCurves <: Texture
+    material::Material
+    gridlines::Material
+    width::Float64  # how thick the lines are
+    levels
+end
+
+# defaults
+LevelCurves(smat::S, gmat::T) where {S <:Material, T<:Material} = LevelCurves(smat, gmat, 0.01, [0.1, 0.2, 0.3])
+LevelCurves(s, g) = LevelCurves(Material(s), Material(g))
+LevelCurves(s) = LevelCurves(Material(s), Material(:black))
+
+
+
+
+
+
+
+
+
+
 struct Testregion <: Texture
     material1::Material
     material2::Material
@@ -154,6 +178,37 @@ function gettexture(s::Shape, t::Grid, q::Vec3)
     
     return t.material, needsrefinement
 end
+
+
+
+
+
+#
+# returns
+#    material
+#    needsrefinement = true if resampling should occur here, (to avoid stripe jaggies)
+#
+# public
+function gettexture(s::Shape, t::LevelCurves, q::Vec3)
+    dfs = minimum(abs.(t.levels .- q.z))
+    needsrefinement = false
+    if dfs < t.width*4
+        needsrefinement = true
+    end
+            
+    if dfs < t.width
+        # stripe color
+        return t.gridlines, needsrefinement
+    end
+    
+    return t.material, needsrefinement
+end
+
+
+
+
+
+
 
 
 
