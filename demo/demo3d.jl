@@ -2,9 +2,11 @@
 module Demo3D
 
 using PlotKit
+using PlotKit3D
 using LinearAlgebra
 
-const pk3 = PlotKit.extensions[:PlotKitExt]
+const pk3 = PlotKit3D
+
 plotpath(x) = joinpath(ENV["HOME"], "plots/", x)
 
 eye(n) = Matrix{Float64}(I(n))
