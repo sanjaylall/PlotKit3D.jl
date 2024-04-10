@@ -8,7 +8,7 @@ using ..Axes3D: Box3
 
 const pk = PlotKit
 
-export Material, Grid, Uniform, Testregion, LevelCurves
+export Material, Grid, Uniform, Testregion, LevelCurves, Shape
 export nohit, Hitdata, gettexture
 
 
