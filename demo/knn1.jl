@@ -7,6 +7,7 @@ using LinearAlgebra
 
 const pk3 = PlotKit3D
 
+plotpath(x) = joinpath(ENV["HOME"], "plots/", x)
 
 function eye(n)
     A = zeros(n,n)
@@ -83,7 +84,10 @@ function voronoi2d(c,p,zbot,ztop, tol)
     cx = c[1]
     cy = c[2]
     
-    function f_in(x,y,z)
+    function f_in(a)
+        x = a.x
+        y = a.y
+        z = a.z
         if z > ztop || z < zbot
             return false
         end
@@ -98,18 +102,21 @@ function voronoi2d(c,p,zbot,ztop, tol)
         return true
     end
 
-    function f_nrm(x,y,z)
+    function f_nrm(a)
+        x = a.x
+        y = a.y
+        z = a.z
         if abs(z-ztop) < tol
-            return 0,0,1,2
+            return Vec3(0,0,1), 2
         end
         if abs(z-zbot) < tol
-            return 0,0,-1,2
+            return Vec3(0,0,-1), 2
         end
         if abs(x-xmin) < tol
-            return -1,0,0,1
+            return Vec3(-1,0,0), 1
         end
         if abs(y-ymin) < tol
-            return 0,-1,0,1
+            return Vec3(0,-1,0), 1
         end
         
         a = [x,y]
@@ -121,8 +128,10 @@ function voronoi2d(c,p,zbot,ztop, tol)
         y,j = findmin(z)
         q = p[j,:]
         nrm = q-c
-        return nrm[1], nrm[2], 0,1
+        return Vec3(nrm[1], nrm[2], 0.0), 1
     end
+
+        
     return f_in, f_nrm
 end
 
@@ -180,7 +189,7 @@ function main()
     end
     
     
-    box = [-3,3,-3,3,-3,3]
+    box = Box3(-3,3,-3,3,-3,3)
 
     # winsize=(1000,1000)
     # p = Cplot3.axes3(box,  fontsize=30, winsize=winsize, dest="knn3d.pdf")
@@ -194,7 +203,10 @@ function main()
     # Cplot.close(p)
 
 
-    rt = raytrace(shapes, box; axisoptions3_
+    rt = raytrace(shapes, box; axisoptions3_fontsize=30, axisoptions3_width=800,
+                  axisoptions3_height=800)
+    d = draw(rt)
+    save(d, plotpath("knn3d.pdf"))
     
 end
 

@@ -203,6 +203,8 @@ end
 # q is point on surface
 #
 function CoreRT.getdistancefromstripe(s::ArbitrarySolid, q::Vec3, spacingx, spacingy)
+    xa = q.x
+    ya = q.y
     distfromstripe = min(abs(xa/spacingx - round(xa/spacingx)),
                           abs(ya/spacingy - round(ya/spacingy)))
     return distfromstripe
