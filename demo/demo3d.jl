@@ -294,23 +294,11 @@ function main13()
     df(x, y) = c1, c2
 
     w = 6
-    so = SurfaceOptions(;xmin = -w, xmax = w, ymin = -w, ymax = w,
-                               zmin = -w, zmax = w)
-#    rto = parse_raytrace_options(; 
-#                                        axisoptions3_azimuth = -25,
-#                                        axisoptions3_elevation = 40,
-#                                        renderwidth = 1600,
-#                                        renderheight = 1600,
-#                                        axisoptions3_cube = Box3(-1,1, -1,1, -1,1),
-#                                        axisoptions3_scale3=0.72
-#                                        )
-    b3 = Box3(so.xmin, so.xmax, so.ymin, so.ymax, so.zmin, so.zmax)
-
+    b3 = Box3(-w, w, -w, w, -w, w)
     t1 = Grid(Material(:red), Material(:white), 0.02, 1/3, 1/3)
     t2 = Grid(Material(:red), Material(:white), 0.02, 1/3, 1/3)
 
-    surface = Surface(f, df; so.sampleheight, so.samplegradient,
-                      texture1=t1, texture2=t2)
+    surface = Surface(f, df; texture1=t1, texture2=t2)
     rt = Raytrace([surface], b3;
                   axisoptions3_azimuth = -25,
                   axisoptions3_elevation = 40,
