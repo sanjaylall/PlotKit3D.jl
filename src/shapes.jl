@@ -5,7 +5,7 @@ using LinearAlgebra
 using PlotKit
 
 using ..Basic3D: Vec3, Array23, Array32, Array33
-using ..Axes3D: Box3, Box3f
+using ..Axes3D: Box3, Box3f, axisfromcube
 using ..CoreRT: Texture, Shape, CoreRT, nohit, Hitdata, gettexture
 
 export Ellipsoid
@@ -359,6 +359,14 @@ function CoreRT.transform(p::Polytope, T::Array{Float64,2}, c::Array{Float64,1})
     return Polytope(newA, newb, p.textures)
 end
 
+
+function CoreRT.getdistancefromstripe(s::Polytope, q::Vec3, spacingx, spacingy)
+    xa = q.x
+    ya = q.y
+    distfromstripe = min(abs(xa/spacingx - round(xa/spacingx)),
+                          abs(ya/spacingy - round(ya/spacingy)))
+    return distfromstripe
+end
 
 ##############################################################################
 # Unitcube
