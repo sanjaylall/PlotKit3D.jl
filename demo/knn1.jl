@@ -9,71 +9,12 @@ const pk3 = PlotKit3D
 
 plotpath(x) = joinpath(ENV["HOME"], "plots/", x)
 
-function eye(n)
-    A = zeros(n,n)
-    for i=1:n
-        A[i,i]=1
-    end
-    return A
-end
+eye(n) = Matrix(I(n))
 
-function hemisphere()
-    function f_in(x,y,z)
-        if x*x + y*y + z*z < 1 && y>0
-            return true
-        end
-        return false
-    end
 
-    function f_nrm(x,y,z)
-        if y < 0.02 && y > -0.02
-            return 0,1,0,1
-        end
-        return x,y,z,1
-    end
-    return f_in, f_nrm
-end
 
 normsq(a) = sum(a.*a)
 norm(a) = sqrt(normsq(a))
-
-function voronoi()
-    c = [0,0, 0]
-    p = [2 1 0
-         4 5 1
-         -3 -3 -1
-         1 0 0
-         -1 4  0]
-    
-    p = p /3
-    n = size(p,1)
-    
-    function f_in(x,y,z)
-        a = [x,y,z]
-        for i=1:n
-            q = p[i,:]
-            if norm(a-q) < norm(a-c)
-                return false
-            end
-        end
-        return true
-    end
-
-    function f_nrm(x,y,z)
-        a = [x,y,z]
-        z = zeros(n)
-        for i=1:n
-            q = p[i,:]
-            z[i] = abs(norm(a-q) - norm(a-c)) 
-        end
-        y,j = findmin(z)
-        q = p[j,:]
-        nrm = q-c
-        return nrm[1], nrm[2], nrm[3],1
-    end
-    return f_in, f_nrm
-end
-
 normsqdiff(x1,y1, x2,y2) = (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
 
 function voronoi2d(c,p,zbot,ztop, tol)
@@ -151,10 +92,6 @@ function main()
     greenuniform     = Uniform(green)
     
     shapes = Array{Shape,1}(undef,0)
-
-    #f_in, f_nrm = hemisphere()
-    
-
     zbot = -3
 
     p = [ -2 2.5
@@ -188,21 +125,7 @@ function main()
         push!(shapes, ell)
     end
     
-    
     box = Box3(-3,3,-3,3,-3,3)
-
-    # winsize=(1000,1000)
-    # p = Cplot3.axes3(box,  fontsize=30, winsize=winsize, dest="knn3d.pdf")
-    # camera = Camera(p.ax3, winsize)
-    # for s in shapes
-    #     init!(s, p.ax3)
-    # end
-    # X = raytrace_main(camera, lighting, shapes, winsize, true, false)
-    # image = cairoimagefrommatrix(X)
-    # drawimage(p.ctx, p.ax3, image)
-    # Cplot.close(p)
-
-
     rt = Raytrace(shapes, box; axisoptions3_fontsize=30, axisoptions3_width=400,
                   axisoptions3_height=400)
     d = draw(rt)

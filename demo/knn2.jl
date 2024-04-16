@@ -10,14 +10,7 @@ const pk3 = PlotKit3D
 
 plotpath(x) = joinpath(ENV["HOME"], "plots/", x)
 
-
-function eye(n)
-    A = zeros(n,n)
-    for i=1:n
-        A[i,i]=1
-    end
-    return A
-end
+eye(n) = Matrix(I(n))
 
 normsq(a) = sum(a.*a)
 norm(a) = sqrt(normsq(a))
@@ -75,27 +68,13 @@ function voronoik(c1,c2,p,zbot,ztop, tol)
             qx = p[i,1]
             qy = p[i,2]
             if abs(sqrt(normsqdiff(x, y, qx, qy)) - sqrt(normsqdiff(x, y, cx1, cy1))) < 2*tol
-                #println("pt1")
-                #println("x = ", x, ", y = ", y)
-                #println("qx = ", qx, ", qy = ", qy)
-                #println("cx1 = ", cx1, ", cy1 = ", cy1)
-                #println("cx2 = ", cx2, ", cy2 = ", cy2)
                 nx = qx-cx1
                 ny = qy-cy1
-                #println("nx = ", nx, ", ny = ", ny)
-                #println()
                 return Vec3(nx, ny, 0), 1
             end
             if abs(sqrt(normsqdiff(x, y, qx, qy)) - sqrt(normsqdiff(x, y, cx2, cy2))) < 2*tol
-                #println("pt2")
-                #println("x = ", x, ", y = ", y)
-                #println("qx = ", qx, ", qy = ", qy)
-                #println("cx1 = ", cx1, ", cy1 = ", cy1)
-                #println("cx2 = ", cx2, ", cy2 = ", cy2)
                 nx = qx - cx2
                 ny = qy - cy2
-                #println("nx = ", nx, ", ny = ", ny)
-                #println()
                 return Vec3(nx, ny, 0), 1
             end
         end
@@ -106,7 +85,6 @@ function voronoik(c1,c2,p,zbot,ztop, tol)
 end
 
 normsqdiff(x1,y1, x2,y2) = (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
-
 
 
 function main()
@@ -125,9 +103,6 @@ function main()
     greenuniform     = Uniform(green)
     
     shapes = Array{Shape,1}(undef,0)
-
-    #f_in, f_nrm = hemisphere()
-    
 
     zbot = -3
 
@@ -167,21 +142,6 @@ function main()
     end
     
     box = Box3(-3,3,-3,3,-3,3)
-
-    #box = [-3,3,-3,3,-3,3]
-    #winsize=(1000,1000)
-    #p = Cplot3.axes3(box,  fontsize=30, winsize=winsize, dest="knn3d2.pdf")
-    #camera = Camera(p.ax3, winsize)
-    #for s in shapes
-    #    init!(s, p.ax3)
-    #end
-    #X = raytrace_main(camera, lighting, shapes, winsize, true, false)
-    #image = cairoimagefrommatrix(X)
-    #drawimage(p.ctx, p.ax3, image)
-    #Cplot.close(p)
-
-
-
     rt = Raytrace(shapes, box; axisoptions3_fontsize=30, axisoptions3_width=400,
                   axisoptions3_height=400)
     d = draw(rt)
