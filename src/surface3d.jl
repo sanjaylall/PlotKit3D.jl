@@ -11,7 +11,11 @@ using ..RayTracer: Camera, raytrace_main
 using ..RTcairo: cairoimagefrommatrix
 using ..AxisDrawables3D: AxisDrawable3
 
-export Surface, SurfaceOptions, parse_raytrace_options, raytrace, surf, drawraytrace
+export SurfaceOptions, parse_raytrace_options, raytrace, surf, drawraytrace
+
+#
+# A Surface is a subtype of Shape, something that can be raytraced.
+#
 
 const pk = PlotKit
 
@@ -39,6 +43,7 @@ Base.@kwdef mutable struct SurfaceOptions
 end
 
 
+# why is Raytrace separate from RaytraceOptions
 Base.@kwdef mutable struct Raytrace
     box
     shapes
@@ -138,6 +143,11 @@ function getlimitsfromfn(box2, zfun::Function)
 end
 
 
+#
+# SurfaceOptions isn't public, so why have it?
+# It's a convenient place to put the defaults for surface.
+# 
+#
 function surf(zfun, dzfun; kw...)
     so = SurfaceOptions()
     setoptions!(so, "", kw...)
