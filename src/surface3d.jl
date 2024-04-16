@@ -11,7 +11,7 @@ using ..RayTracer: Camera, raytrace_main
 using ..RTcairo: cairoimagefrommatrix
 using ..AxisDrawables3D: AxisDrawable3
 
-export SurfaceOptions, parse_raytrace_options, raytrace, surf, drawraytrace
+export SurfaceOptions, parse_raytrace_options, Raytrace, surf, drawraytrace
 
 #
 # A Surface is a subtype of Shape, something that can be raytraced.
@@ -19,14 +19,6 @@ export SurfaceOptions, parse_raytrace_options, raytrace, surf, drawraytrace
 
 const pk = PlotKit
 
-Base.@kwdef mutable struct RaytraceOptions
-    lighting = Lighting()
-    refine = true
-    shadows = false
-    axisoptions3 = AxisOptions3()
-    renderwidth = missing
-    renderheight = missing
-end
 
 Base.@kwdef mutable struct SurfaceOptions
     xmin = -1
@@ -39,67 +31,92 @@ Base.@kwdef mutable struct SurfaceOptions
     samplegradient = true
     texture1 = Grid(:red)
     texture2 = Grid(:green)
-    rto = RaytraceOptions()
+    #rto = RaytraceOptions()
+    # below was in RaytraceOptions
+    lighting = Lighting()
+    refine = true
+    shadows = false
+    axisoptions3 = AxisOptions3()
+    renderwidth = missing
+    renderheight = missing
 end
 
 
-# why is Raytrace separate from RaytraceOptions
+# why is Raytrace separate from RaytraceOptions?
+# We should just unify these.
 Base.@kwdef mutable struct Raytrace
     box
     shapes
-    axis3
-    rto::RaytraceOptions
+    axis3 = nothing
+    # below was in RaytraceOptions
+    lighting = Lighting()
+    refine = true
+    shadows = false
+    axisoptions3 = AxisOptions3()
+    renderwidth = missing
+    renderheight = missing
 end
 
 
-function drawraytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
-    renderwidth = ifnotmissing(rto.renderwidth, axis3.width)
-    renderheight = ifnotmissing(rto.renderheight, axis3.height)
-    camera = Camera(axis3.axismap3, axis3.width, axis3.height, renderwidth, renderheight)
+function PlotKit.draw(ad::AxisDrawable3, rt::Raytrace)
+    #drawraytrace(ctx, axis3, shapes, box, rto::RaytraceOptions)
+    renderwidth = ifnotmissing(rt.renderwidth, rt.axis3.width)
+    renderheight = ifnotmissing(rt.renderheight, rt.axis3.height)
+    camera = Camera(rt.axis3.axismap3, rt.axis3.width,
+                    rt.axis3.height, renderwidth, renderheight)
 
-    shapes_in_cube_coords = [transform(s, axis3) for s in shapes]
+    shapes_in_cube_coords = [transform(s, rt.axis3) for s in rt.shapes]
     for s in shapes_in_cube_coords
-        addlimits(s, axis3.axismap3.cube)
+        addlimits(s, rt.axis3.axismap3.cube)
     end
      
 
-    X = raytrace_main(camera, rto.lighting,
+    X = raytrace_main(camera, rt.lighting,
                       shapes_in_cube_coords,
-                      rto.refine, rto.shadows)
+                      rt.refine, rt.shadows)
     
     image = cairoimagefrommatrix(X)
-    drawimage(ctx, camera, image)
+    drawimage(ad.ctx, camera, image)
 end
 
 
-function raytrace(shapes, box, rto::RaytraceOptions)
-    axis3 = Axis3(box, rto.axisoptions3)
-    d = Drawable(axis3.width, axis3.height)
-    rt = Raytrace(box, shapes, axis3, rto)
-    return rt
-end
+#function raytrace(shapes, box, rto::RaytraceOptions)
+#    axis3 = Axis3(box, rto.axisoptions3)
+#    d = Drawable(axis3.width, axis3.height)
+#    rt = Raytrace(box, shapes, axis3, rto)
+#    return rt
+#end
+# 
+# 
+# function extra_raytrace_options!(rto; kw...)
+#     setoptions!(rto.axisoptions3, "axisoptions3_", kw...)
+#     setoptions!(rto.axisoptions3.tickbox, "tickbox_", kw...)
+#     setoptions!(rto.axisoptions3.axisbox, "axisbox_", kw...)
+#     setoptions!(rto.axisoptions3.ticks, "ticks_", kw...)
+#     setoptions!(rto.axisoptions3.axisstyle3, "axisstyle3_", kw...)
+# end
+#     
+#     
+# function parse_raytrace_options(; kw...)
+#     rto = RaytraceOptions()
+#     setoptions!(rto, "", kw...)
+#     extra_raytrace_options!(rto; kw...)
+#     return rto
+# end
+# 
 
-function extra_raytrace_options!(rto; kw...)
-    setoptions!(rto.axisoptions3, "axisoptions3_", kw...)
-    setoptions!(rto.axisoptions3.tickbox, "tickbox_", kw...)
-    setoptions!(rto.axisoptions3.axisbox, "axisbox_", kw...)
-    setoptions!(rto.axisoptions3.ticks, "ticks_", kw...)
-    setoptions!(rto.axisoptions3.axisstyle3, "axisstyle3_", kw...)
-end
+function Raytrace(shapes, box; kw...)
+    rt = Raytrace(; shapes, box, allowed_kws(Raytrace, kw)...)
+    setoptions!(rt.axisoptions3, "axisoptions3_", kw...)
+    setoptions!(rt.axisoptions3.tickbox, "tickbox_", kw...)
+    setoptions!(rt.axisoptions3.axisbox, "axisbox_", kw...)
+    setoptions!(rt.axisoptions3.ticks, "ticks_", kw...)
+    setoptions!(rt.axisoptions3.axisstyle3, "axisstyle3_", kw...)
+    rt.axis3 = Axis3(box, rt.axisoptions3)
+#    rt = raytrace(shapes, box, rto)
+    #d = Drawable(axis3.width, axis3.height)
+    #rt = Raytrace(box, shapes, axis3, rto)
     
-    
-function parse_raytrace_options(; kw...)
-    rto = RaytraceOptions()
-    setoptions!(rto, "", kw...)
-    extra_raytrace_options!(rto; kw...)
-    return rto
-end
-
-
-function raytrace(shapes, box; kw...)
-    rto = parse_raytrace_options(; kw...)
-    axis3 = Axis3(box, rto.axisoptions3)
-    rt = raytrace(shapes, box, rto)
     return rt
 end
 
@@ -114,7 +131,8 @@ end
 function PlotKit.draw(rt::Raytrace)
     ad = AxisDrawable3(rt.axis3)
     drawaxis3(ad)
-    drawraytrace(ad.ctx, rt.axis3, rt.shapes, rt.box, rt.rto)
+    #drawraytrace(ad.ctx, rt.axis3, rt.shapes, rt.box, rt.rto)
+    draw(ad, rt)
     return ad
 end
 
@@ -144,15 +162,17 @@ end
 
 
 #
-# SurfaceOptions isn't public, so why have it?
-# It's a convenient place to put the defaults for surface.
-# 
+# SurfaceOptions isn't public. But we have it so that
+# we don't need to define a function with a long list of keyword options.
+# Instead, we keep the defaults in the SurfaceOptions struct.
 #
 function surf(zfun, dzfun; kw...)
-    so = SurfaceOptions()
-    setoptions!(so, "", kw...)
-    setoptions!(so.rto, "raytrace_", kw...)
-    extra_raytrace_options!(so.rto; kw...)
+    so = SurfaceOptions(; allowed_kws(SurfaceOptions, kw)...)
+    setoptions!(so.axisoptions3, "axisoptions3_", kw...)
+    setoptions!(so.axisoptions3.tickbox, "tickbox_", kw...)
+    setoptions!(so.axisoptions3.axisbox, "axisbox_", kw...)
+    setoptions!(so.axisoptions3.ticks, "ticks_", kw...)
+    setoptions!(so.axisoptions3.axisstyle3, "axisstyle3_", kw...)
 
     box2 = getbox(so)
     if ismissing(so.zmin) || ismissing(so.zmax)
@@ -163,7 +183,13 @@ function surf(zfun, dzfun; kw...)
     box3 = Box3(so.xmin, so.xmax, so.ymin, so.ymax, so.zmin, so.zmax)
     surface = Surface(zfun, dzfun; so.sampleheight, so.samplegradient,
                       so.texture1, so.texture2)
-    raytrace([surface], box3, so.rto)
+    Raytrace([surface], box3;
+             lighting = so.lighting,
+             refine = so.refine,
+             shadows = so.shadows,
+             axisoptions3 = so.axisoptions3,
+             renderwidth = so.renderwidth,
+             renderheight= so.renderheight)
 end
 
 end

@@ -122,9 +122,9 @@ end
 
 
 function main5()
-    ell = pk3.Ellipsoid(eye(3),[2,-2,1], pk3.Uniform(:red))
-    box = pk3.Box3(-3,3,-3,3,-3,3)
-    rt = pk3.raytrace([ell], box)
+    ell = Ellipsoid(eye(3),[2,-2,1], pk3.Uniform(:red))
+    box = Box3(-3,3,-3,3,-3,3)
+    rt = Raytrace([ell], box)
     d = draw(rt)
     save(d, plotpath("raytrace5.pdf"))
 end
@@ -137,7 +137,7 @@ function main6()
          0.0  0.0  1.0;
          0.0  0.0 -1.0;]
     b = 0.75* [1.0,1.0,1.0,1.0,1.0,1.0]
-    poly1 = pk3.Polytope(A, b, fill(pk3.Uniform(:blue), 6))
+    poly1 = Polytope(A, b, fill(Uniform(:blue), 6))
     
     A2 =[ 1  0  0;
          -1  0  0;
@@ -146,7 +146,7 @@ function main6()
           0  0  1;
           0  0 -1;]
     b2 = [1,1,1,1,4,4]
-    poly2 = pk3.Polytope(A2, b2, fill(pk3.Uniform(:green), 6))
+    poly2 = Polytope(A2, b2, fill(Uniform(:green), 6))
 
     A3 =[ 1.0  1.0  0.0;
          -1.0 -1.0  0.0;
@@ -155,7 +155,7 @@ function main6()
           0.0  -0.2  1.0;
           0.0  0.0 -1.0;]
     b3 = [1,1,1,1,3,3]
-    poly3 = pk3.Polytope(A3, b3, fill(pk3.Uniform(:red), 6))
+    poly3 = Polytope(A3, b3, fill(Uniform(:red), 6))
 
     A4 = [1 1 1;
           1 1 -1;
@@ -168,14 +168,14 @@ function main6()
     b4 = [1,1,1,1,1,1,1,1]
     x4center = [1,0,1]
     b4 = b4 + A4*x4center
-    poly4 = pk3.Polytope(A4, b4, fill(pk3.Uniform(:green), 8))
+    poly4 = Polytope(A4, b4, fill(Uniform(:green), 8))
           
-    ell = pk3.Ellipsoid(eye(3),[2,-2,1], pk3.Uniform(:white))
-    ell2 = pk3.Ellipsoid(eye(3),[0,-2,-1], pk3.Uniform(:white))
+    ell = Ellipsoid(eye(3),[2,-2,1], Uniform(:white))
+    ell2 = Ellipsoid(eye(3),[0,-2,-1], Uniform(:white))
     
     shapes = [ poly1, poly4, ell, ell2]
-    box = pk3.Box3(-1,2,-3,3,-3,2)
-    rt = pk3.raytrace(shapes, box;  shadows = true)
+    box = Box3(-1,2,-3,3,-3,2)
+    rt = Raytrace(shapes, box;  shadows = true)
     d = draw(rt)
     save(d, plotpath("raytrace6.pdf"))
 end
@@ -198,14 +198,14 @@ end
 function main7()
     # 3d peaks plot, ala Matlab
     f, df = getsurf7()
-    rt = pk3.surf(f, df; xmin = -3, xmax = 3, ymin = -3, ymax = 3,
+    rt = surf(f, df; xmin = -3, xmax = 3, ymin = -3, ymax = 3,
               azimuth = -25,elevation =  atan(1/sqrt(2))*180/pi)
     d = draw(rt)
     save(d, plotpath("raytrace7.pdf"))
 end
 
 
-# draw a pk3.Polytope
+# draw a Polytope
 function main8()
     A = [1.0 1 1;
          1 1 -1;
@@ -218,8 +218,8 @@ function main8()
     b = [1,1,1,1,1,1,1,1]
     xcenter = [1,0,1]
     b = b + A*xcenter
-    poly = pk3.Polytope(A, b, fill(pk3.Uniform(:red), 8))
-    rt = pk3.raytrace([poly], pk3.Box3(-1,2,-3,3,-3,2); shadows = true)
+    poly = Polytope(A, b, fill(Uniform(:red), 8))
+    rt = Raytrace([poly], Box3(-1,2,-3,3,-3,2); shadows = true)
     d = draw(rt)
     save(d, plotpath("raytrace8.pdf"))
 end
@@ -228,8 +228,8 @@ end
 # draw an ellipsoid
 function main9()
     Z = [4.8 1.2 -3.6; 1.2 4.8 -1.4; -3.6 -1.4 4.4]
-    ell = pk3.Ellipsoid(Z,[0,-2,1], pk3.Uniform(:red))
-    rt = pk3.raytrace([ell], pk3.Box3(-1,2,-3,3,-3,2) ;  shadows = true)
+    ell = Ellipsoid(Z,[0,-2,1], Uniform(:red))
+    rt = Raytrace([ell], Box3(-1,2,-3,3,-3,2) ;  shadows = true)
     d = draw(rt)
     save(d, plotpath("raytrace9.pdf"))
 end
@@ -243,7 +243,7 @@ end
 function gettv()
     tvinside(a) = a.x^4 + a.y^4 + a.z^4 <= 1
     function tvnormal(a)
-        q =  pk3.Vec3(4*a.x^3, 4*a.y^3, 4*a.z^3)
+        q =  Vec3(4*a.x^3, 4*a.y^3, 4*a.z^3)
         return q, 1
     end
     return tvinside, tvnormal
@@ -253,8 +253,8 @@ end
 # draw a tvscreen
 function main10()
     f, df = gettv()
-    arb = pk3.ArbitrarySolid(f, df, 1e-3, pk3.Uniform(:red), pk3.Uniform(:green))
-    rt = pk3.raytrace([arb], pk3.Box3(-1,2,-3,3,-3,2); shadows = true)
+    arb = ArbitrarySolid(f, df, 1e-3, Uniform(:red), Uniform(:green))
+    rt = Raytrace([arb], Box3(-1,2,-3,3,-3,2); shadows = true)
     d = draw(rt)
     save(d, plotpath("raytrace10.pdf"))
 end
@@ -263,7 +263,7 @@ end
 # high res
 function main11()
     f, df = getsurf1()
-    rt = pk3.surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
+    rt = surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
               raytrace_renderwidth = 1600, raytrace_renderheight = 1200,
               axisoptions3_azimuth = -25, axisoptions3_elevation = 40)
     d = draw(rt)
@@ -274,10 +274,10 @@ end
 # aspect ratio
 function main12()
     f, df = getsurf1()
-    rt = pk3.surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
+    rt = surf(f, df; xmin = -5, xmax = 5, ymin = -5, ymax = 5,
            axisoptions3_azimuth = -25, axisoptions3_elevation = 40,
            raytrace_renderwidth = 1600, raytrace_renderheight = 1200,
-           axisoptions3_cube = pk3.Box3(-2,2, -2,2, -1, 1), axisoptions3_scale3=0.5
+           axisoptions3_cube = Box3(-2,2, -2,2, -1, 1), axisoptions3_scale3=0.5
               )
     d = draw(rt)
     save(d, plotpath("raytrace12.pdf"))
@@ -294,29 +294,36 @@ function main13()
     df(x, y) = c1, c2
 
     w = 6
-    so = pk3.SurfaceOptions(;xmin = -w, xmax = w, ymin = -w, ymax = w,
+    so = SurfaceOptions(;xmin = -w, xmax = w, ymin = -w, ymax = w,
                                zmin = -w, zmax = w)
-    rto = pk3.parse_raytrace_options(; 
-                                        axisoptions3_azimuth = -25,
-                                        axisoptions3_elevation = 40,
-                                        renderwidth = 1600,
-                                        renderheight = 1600,
-                                        axisoptions3_cube = pk3.Box3(-1,1, -1,1, -1,1),
-                                        axisoptions3_scale3=0.72
-                                        )
-    b3 = pk3.Box3(so.xmin, so.xmax, so.ymin, so.ymax, so.zmin, so.zmax)
+#    rto = parse_raytrace_options(; 
+#                                        axisoptions3_azimuth = -25,
+#                                        axisoptions3_elevation = 40,
+#                                        renderwidth = 1600,
+#                                        renderheight = 1600,
+#                                        axisoptions3_cube = Box3(-1,1, -1,1, -1,1),
+#                                        axisoptions3_scale3=0.72
+#                                        )
+    b3 = Box3(so.xmin, so.xmax, so.ymin, so.ymax, so.zmin, so.zmax)
 
-    t1 = pk3.Grid(pk3.Material(:red), pk3.Material(:white), 0.02, 1/3, 1/3)
-    t2 = pk3.Grid(pk3.Material(:red), pk3.Material(:white), 0.02, 1/3, 1/3)
+    t1 = Grid(Material(:red), Material(:white), 0.02, 1/3, 1/3)
+    t2 = Grid(Material(:red), Material(:white), 0.02, 1/3, 1/3)
 
-    surface = pk3.Surface(f, df; so.sampleheight, so.samplegradient,
+    surface = Surface(f, df; so.sampleheight, so.samplegradient,
                       texture1=t1, texture2=t2)
-    rt = pk3.raytrace([surface], b3, rto)
+    rt = Raytrace([surface], b3;
+                  axisoptions3_azimuth = -25,
+                  axisoptions3_elevation = 40,
+                  renderwidth = 1600,
+                  renderheight = 1600,
+                  axisoptions3_cube = Box3(-1,1, -1,1, -1,1),
+                  axisoptions3_scale3=0.72
+                  )
     d = draw(rt)
 
     am3 = rt.axis3.axismap3
-    f(q)  = pk3.ctxfromaxis(am3, q)
-    v3(x,y,z) = pk3.Vec3(x, y, z)
+    f(q)  = ctxfromaxis(am3, q)
+    v3(x,y,z) = Vec3(x, y, z)
     circle(d.ctx, f(v3(0,0,0)), 3; fillcolor = Color(:black))
     arrow = TriangularArrow(size = 5, fillcolor = Color(:white))
     arrows = ((1, arrow),)
@@ -346,7 +353,7 @@ function main14()
     x = range(-w, w, step = 2)
     y = range(-w, w, step = 2)
 
-    rt = pk3.Mesh(x, y, f; patchcolor = Color(0.8,0.8,1),
+    rt = Mesh(x, y, f; patchcolor = Color(0.8,0.8,1),
                   width = 600, height = 600,
                   azimuth = -25, elevation = 40,windowbackgroundcolor = Color(:white),
                   drawbackground = false,
@@ -356,14 +363,14 @@ function main14()
                   tickbox_zmin = -w, tickbox_zmax = w)
     d = draw(rt)
 
-    v3(x) = pk3.Vec3(x[1], x[2], x[3])
+    v3(x) = Vec3(x[1], x[2], x[3])
 
-    drawvec(v, c) = draw(d, arrow([pk3.Vec3(0,0,0), v3(v)]; center = true,
+    drawvec(v, c) = draw(d, arrow([Vec3(0,0,0), v3(v)]; center = true,
                                   linestyle = LineStyle(c,1), fillcolor = c))
     drawvec(a, Color(:blue))
     drawvec(v1, Color(:red))
     drawvec(v2, Color(:red))
-    circle(d, pk3.Vec3(0,0,0), 2; fillcolor = Color(:black))
+    circle(d, Vec3(0,0,0), 2; fillcolor = Color(:black))
 
     save(d, plotpath("raytrace14.pdf"))
     return rt

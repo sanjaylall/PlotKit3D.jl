@@ -203,8 +203,8 @@ function main()
     # Cplot.close(p)
 
 
-    rt = raytrace(shapes, box; axisoptions3_fontsize=30, axisoptions3_width=500,
-                  axisoptions3_height=500)
+    rt = Raytrace(shapes, box; axisoptions3_fontsize=30, axisoptions3_width=400,
+                  axisoptions3_height=400)
     d = draw(rt)
     save(d, plotpath("knn3d.pdf"))
     
