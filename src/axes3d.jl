@@ -259,6 +259,10 @@ function Axis3(databox::Box3, ao3::AxisOptions3)
     axis2 = Axis(; axisequal = true,
                  width = ao3.width, height = ao3.height,
                  windowbackgroundcolor = 0.9*Color(:white),
+                 lmargin = ao3.lmargin,
+                 rmargin = ao3.rmargin,
+                 tmargin = ao3.tmargin,
+                 bmargin = ao3.bmargin,
                  axisbox_xmin = -1, axisbox_xmax = 1,
                  axisbox_ymin = -1, axisbox_ymax =1)
 
