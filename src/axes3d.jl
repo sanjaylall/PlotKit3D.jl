@@ -248,11 +248,13 @@ function Axis3(databox::Box3, ao3::AxisOptions3)
 
     tickbox = ifnotmissing(ao3.tickbox, databox)
     #println("tickbox = ", tickbox)
+    #println("ao3.ticks = ", ao3.ticks)
     ticks3 = ifnotmissing(ao3.ticks, Ticks3(tickbox,
                                             ao3.xidealnumlabels,
                                             ao3.yidealnumlabels,
                                             ao3.zidealnumlabels))
-                          
+
+    #println((;ticks3))
     axisbox3 = ifnotmissing(ao3.axisbox, get_tick_extents3(ticks3))
     #println("axisbox3 = ", axisbox3)
     
@@ -487,17 +489,23 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
     
     # draw the lines on the faces of the cube that correspond to ticklines
     for xt in xticks
-        tickline(xt, ymax, zfar, xt, ymin, zfar)
-        tickline(xt, yfar, zmin, xt, yfar, zmax)
+        if xmin < xt < xmax
+            tickline(xt, ymax, zfar, xt, ymin, zfar)
+            tickline(xt, yfar, zmin, xt, yfar, zmax)
+        end
     end
     for yt in yticks
-        tickline(xmin, yt, zfar, xmax, yt, zfar)
-        tickline(xfar, yt, zmin, xfar, yt, zmax)
+        if ymin < yt < ymax
+            tickline(xmin, yt, zfar, xmax, yt, zfar)
+            tickline(xfar, yt, zmin, xfar, yt, zmax)
+        end
     end
     
     for zt in zticks
-        tickline(xmin, yfar, zt, xmax, yfar, zt)
-        tickline(xfar, ymin, zt, xfar, ymax, zt)
+        if zmin < zt < zmax
+            tickline(xmin, yfar, zt, xmax, yfar, zt)
+            tickline(xfar, ymin, zt, xfar, ymax, zt)
+        end
     end
   
             
@@ -546,32 +554,38 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
     # draw the font
     for i = 1:length(xticks)
         xt = xticks[i]
-        pos = cubefromaxis(axismap3, Vec3(xt, ynear, zfar)) + xtickoffset
-        text(ctx, ctxfromcube(axismap3, pos),
-             as3.fontsize, as3.fontcolor, xtickstrings[i];
-             fname = as3.fontname,
-             horizontal = "center")
-        exttickline(Vec3(xt, ynear, zfar), 0.4*xtickoffset)
+        if xmin < xt < xmax
+            pos = cubefromaxis(axismap3, Vec3(xt, ynear, zfar)) + xtickoffset
+            text(ctx, ctxfromcube(axismap3, pos),
+                 as3.fontsize, as3.fontcolor, xtickstrings[i];
+                 fname = as3.fontname,
+                 horizontal = "center")
+            exttickline(Vec3(xt, ynear, zfar), 0.4*xtickoffset)
+        end
     end
     
     for i = 1:length(yticks)
         yt = yticks[i]
-        pos = cubefromaxis(axismap3, Vec3(xnear, yt, zfar)) + ytickoffset
-        text(ctx, ctxfromcube(axismap3, pos),
-             as3.fontsize, as3.fontcolor, ytickstrings[i];
-             fname = as3.fontname,
-             horizontal = "center", vertical = "center")
-        exttickline(Vec3(xnear, yt, zfar), 0.4*ytickoffset)
+        if ymin < yt < ymax
+            pos = cubefromaxis(axismap3, Vec3(xnear, yt, zfar)) + ytickoffset
+            text(ctx, ctxfromcube(axismap3, pos),
+                 as3.fontsize, as3.fontcolor, ytickstrings[i];
+                 fname = as3.fontname,
+                 horizontal = "center", vertical = "center")
+            exttickline(Vec3(xnear, yt, zfar), 0.4*ytickoffset)
+        end
     end
     
     for i = 1:length(zticks)
         zt = zticks[i]
-        pos = cubefromaxis(axismap3, Vec3(zaxis_x, zaxis_y, zt)) + ztickoffset
-        text(ctx, ctxfromcube(axismap3, pos),
-             as3.fontsize, as3.fontcolor, ztickstrings[i];
-             fname = as3.fontname,
-             vertical = "center", horizontal = "right")
-        exttickline(Vec3(zaxis_x, zaxis_y, zt), 0.4*ztickoffset)
+        if zmin < zt < zmax
+            pos = cubefromaxis(axismap3, Vec3(zaxis_x, zaxis_y, zt)) + ztickoffset
+            text(ctx, ctxfromcube(axismap3, pos),
+                 as3.fontsize, as3.fontcolor, ztickstrings[i];
+                 fname = as3.fontname,
+                 vertical = "center", horizontal = "right")
+            exttickline(Vec3(zaxis_x, zaxis_y, zt), 0.4*ztickoffset)
+        end
     end
 
     # draw the labels

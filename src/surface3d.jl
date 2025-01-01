@@ -129,6 +129,7 @@ function surf(zfun, dzfun; kw...)
     box3 = Box3(so.xmin, so.xmax, so.ymin, so.ymax, so.zmin, so.zmax)
     surface = Surface(zfun, dzfun; so.sampleheight, so.samplegradient,
                       so.texture1, so.texture2)
+
     Raytrace([surface], box3;
              lighting = so.lighting,
              refine = so.refine,
