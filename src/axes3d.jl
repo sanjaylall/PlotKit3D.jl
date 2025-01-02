@@ -103,7 +103,9 @@ Base.@kwdef mutable struct AxisStyle3
     drawaxisbackground = true
     axisbackgroundcolor = Color(:white)
     axisedgelinestyle = LineStyle(Color(:black), 1)
+    faraxisedgelinestyle = LineStyle(0.87 * Color(:white), 1)
     drawaxisedges = true
+    drawfaraxisedges = false
     gridlinestyle = LineStyle(0.87 * Color(:white), 1)
     fontsize = 10
     fontname = "Sans"
@@ -518,6 +520,19 @@ function drawaxis3(ctx, axismap3, axis2, box, ticks, as3::AxisStyle3)
         # z
         line(ctx, g.(Vec3[(zaxis_x, zaxis_y, zmin), (zaxis_x, zaxis_y, zmax)]); linestyle)
     end
+
+    if as3.drawfaraxisedges
+        linestyle = as3.faraxisedgelinestyle
+        # x axis is drawn at far y
+        line(ctx, g.(Vec3[(xmin, yfar, zfar), (xmax, yfar, zfar)]); linestyle)
+        # y
+        line(ctx, g.(Vec3[(xfar, ymin, zfar), (xfar, ymax, zfar)]); linestyle)
+        # z
+        line(ctx, g.(Vec3[(xfar, yfar, zmin), (xfar, yfar, zmax)]); linestyle)
+    end
+
+
+    
 
     function exttickline(q::Vec3, offset)
         a = ctxfromaxis(axismap3, q)
