@@ -16,7 +16,7 @@ ifnotnothing(x::Nothing, y) = y
 ifnotnothing(x, y) = x
 
 hadamard(p::Vec3, q::Vec3) = vec3_hadamard(p,q)
-hadamarddiv(p::Vec3, q::Vec3) = vec3_hadamard_div(p,q)
+hadamarddiv(p::Vec3, q::Vec3) = vec3_hadamarddiv(p,q)
 
 mutable struct Box3 
     xmin

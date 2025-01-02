@@ -7,6 +7,7 @@ using LinearAlgebra
 const pk = PlotKit
 export Vec3, Array33, Array32, Array23, Arrayn3, dot, normalize, vec3_hadamard, vec3_hadamarddiv
 
+
 struct Vec3
     x::Float64
     y::Float64

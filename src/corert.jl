@@ -125,7 +125,7 @@ Grid(s) = Grid(Material(s), Material(:black))
 
 
 
-struct LevelCurves <: Texture
+mutable struct LevelCurves <: Texture
     material::Material
     gridlines::Material
     width::Float64  # how thick the lines are
