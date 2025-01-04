@@ -4,7 +4,7 @@ module CoreRT
 using LinearAlgebra
 using PlotKit
 using ..Basic3D: Vec3
-using ..Axes3D: Box3
+using ..Axes3D: Box3, AxisMap3, cubefromaxis
 
 const pk = PlotKit
 
@@ -14,8 +14,8 @@ export nohit, Hitdata, gettexture
 
 
 # functions which which are public methods of Shape objects
-export hitnormal,  hittexture,  hitshape,  init!,   getdistancefromstripe, transform
-export addlimits
+export addlimits, hitnormal,  hittexture,  hitshape,  init!,  getdistancefromstripe
+export setlevels!, transform
 
 abstract type Shape end
 abstract type Texture end
@@ -138,8 +138,10 @@ LevelCurves(s, g) = LevelCurves(Material(s), Material(g))
 LevelCurves(s) = LevelCurves(Material(s), Material(:black))
 
 
-
-
+# convert levels from axis coords to cube coords
+function setlevels!(s::LevelCurves, am3::AxisMap3, levels)
+    s.levels = [cubefromaxis(am3, Vec3(0,0,z)).z for z in levels]
+end
 
 
 
