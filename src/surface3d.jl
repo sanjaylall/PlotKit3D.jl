@@ -3,6 +3,7 @@ module Surface3D
 
 using PlotKit
 
+using JuliaTools
 using ..Axes3D: Box3, Box3f, AxisOptions3, Axis3, drawaxis3, get_hexagon
 using ..CoreRT: Grid, transform, addlimits, hitshape
 using ..ShapeSurface: Surface

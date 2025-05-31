@@ -7,4 +7,5 @@ version = "0.1.1"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Cairo = "159f3aea-2a34-519c-b102-8c37f9878175"
 PlotKit = "003d7de4-8e60-4dbf-84f8-37f925e78aff"
+JuliaTools = "25bd99f7-d62a-43e8-a0d1-199798cd3f46"
 

@@ -5,6 +5,7 @@ using PlotKit
 using LinearAlgebra
 
 using ..Basic3D: Vec3, Array23, Array32, dot, vec3_hadamard, vec3_hadamarddiv
+using JuliaTools
 
 export Axis3, AxisMap3, Box3, Box3f, drawaxis3, ctxfromcube, axisfromcube
 export cubefromctx, ctxfromaxis, AxisOptions3
@@ -32,7 +33,7 @@ Box3(;
      ymin=missing, ymax=missing,
      zmin=missing, zmax=missing) = Box3(xmin, xmax, ymin, ymax, zmin, zmax)
 
-function PlotKit.ifnotmissing(a::Box3, b::Box3)
+function ifnotmissing(a::Box3, b::Box3)
     return Box3(ifnotmissing(a.xmin, b.xmin),
                ifnotmissing(a.xmax, b.xmax),
                ifnotmissing(a.ymin, b.ymin),
@@ -89,7 +90,7 @@ Base.@kwdef mutable struct Ticks3
     ztickstrings = missing
 end
 
-function PlotKit.ifnotmissing(a::Ticks3, b::Ticks3)
+function ifnotmissing(a::Ticks3, b::Ticks3)
     return Ticks3(ifnotmissing(a.xticks, b.xticks),
                   ifnotmissing(a.xtickstrings, b.xtickstrings),
                   ifnotmissing(a.yticks, b.yticks),
