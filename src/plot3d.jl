@@ -7,6 +7,7 @@ using PlotKit
 
 export Mesh, mesh, mesh_height_color_fn, mesh_height_fn, sample_mesh
 using Cairo
+using JuliaTools
 
 using ..Basic3D: Vec3, Array23, Array32, Array33, dot
 using ..Axes3D: Axis3, Box3, Box3f, drawaxis3, ctxfromaxis

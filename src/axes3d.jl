@@ -33,7 +33,7 @@ Box3(;
      ymin=missing, ymax=missing,
      zmin=missing, zmax=missing) = Box3(xmin, xmax, ymin, ymax, zmin, zmax)
 
-function ifnotmissing(a::Box3, b::Box3)
+function JuliaTools.ifnotmissing(a::Box3, b::Box3)
     return Box3(ifnotmissing(a.xmin, b.xmin),
                ifnotmissing(a.xmax, b.xmax),
                ifnotmissing(a.ymin, b.ymin),
@@ -90,7 +90,7 @@ Base.@kwdef mutable struct Ticks3
     ztickstrings = missing
 end
 
-function ifnotmissing(a::Ticks3, b::Ticks3)
+function JuliaTools.ifnotmissing(a::Ticks3, b::Ticks3)
     return Ticks3(ifnotmissing(a.xticks, b.xticks),
                   ifnotmissing(a.xtickstrings, b.xtickstrings),
                   ifnotmissing(a.yticks, b.yticks),
@@ -284,11 +284,11 @@ end
 
 function parse_axisoptions3(; kw...)
     ao3 = AxisOptions3()
-    setoptions!(ao3, "", kw...)
-    setoptions!(ao3.tickbox, "tickbox_", kw...)
-    setoptions!(ao3.axisbox, "axisbox_", kw...)
-    setoptions!(ao3.ticks, "ticks_", kw...)
-    setoptions!(ao3.axisstyle3, "axisstyle3_", kw...)
+    setoptions!(ao3, ""; kw...)
+    setoptions!(ao3.tickbox, "tickbox_"; kw...)
+    setoptions!(ao3.axisbox, "axisbox_"; kw...)
+    setoptions!(ao3.ticks, "ticks_"; kw...)
+    setoptions!(ao3.axisstyle3, "axisstyle3_"; kw...)
     return ao3
 end
 Axis3(p; kw...) = Axis3(p, parse_axisoptions3(; kw...))
