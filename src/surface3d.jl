@@ -68,11 +68,11 @@ end
 
 function Raytrace(shapes, box; kw...)
     rt = Raytrace(; shapes, box, allowed_kws(Raytrace, kw)...)
-    setoptions!(rt.axisoptions3, "axisoptions3_", kw...)
-    setoptions!(rt.axisoptions3.tickbox, "tickbox_", kw...)
-    setoptions!(rt.axisoptions3.axisbox, "axisbox_", kw...)
-    setoptions!(rt.axisoptions3.ticks, "ticks_", kw...)
-    setoptions!(rt.axisoptions3.axisstyle3, "axisstyle3_", kw...)
+    setoptions!(rt.axisoptions3, "axisoptions3_"; kw...)
+    setoptions!(rt.axisoptions3.tickbox, "tickbox_"; kw...)
+    setoptions!(rt.axisoptions3.axisbox, "axisbox_"; kw...)
+    setoptions!(rt.axisoptions3.ticks, "ticks_"; kw...)
+    setoptions!(rt.axisoptions3.axisstyle3, "axisstyle3_"; kw...)
     rt.axis3 = Axis3(box, rt.axisoptions3)
     return rt
 end
@@ -84,7 +84,7 @@ function PlotKit.draw(rt::Raytrace)
     return ad
 end
 
-   
+
 ##############################################################################
 # surface
 
@@ -115,11 +115,11 @@ end
 #
 function surf(zfun, dzfun; kw...)
     so = SurfaceOptions(; allowed_kws(SurfaceOptions, kw)...)
-    setoptions!(so.axisoptions3, "axisoptions3_", kw...)
-    setoptions!(so.axisoptions3.tickbox, "tickbox_", kw...)
-    setoptions!(so.axisoptions3.axisbox, "axisbox_", kw...)
-    setoptions!(so.axisoptions3.ticks, "ticks_", kw...)
-    setoptions!(so.axisoptions3.axisstyle3, "axisstyle3_", kw...)
+    setoptions!(so.axisoptions3, "axisoptions3_"; kw...)
+    setoptions!(so.axisoptions3.tickbox, "tickbox_"; kw...)
+    setoptions!(so.axisoptions3.axisbox, "axisbox_"; kw...)
+    setoptions!(so.axisoptions3.ticks, "ticks_"; kw...)
+    setoptions!(so.axisoptions3.axisstyle3, "axisstyle3_"; kw...)
 
     box2 = getbox(so)
     if ismissing(so.zmin) || ismissing(so.zmax)
