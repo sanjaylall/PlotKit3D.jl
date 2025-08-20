@@ -1,7 +1,7 @@
 name = "PlotKit3D"
 authors = ["Sanjay Lall <lall@stanford.edu>"]
 uuid = "71affed6-3314-4d45-8a89-281a91f05348"
-version = "0.1.5"
+version = "0.1.6"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
