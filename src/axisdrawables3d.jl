@@ -63,11 +63,11 @@ AxisDrawable3(axis3::Axis3, dw::RecorderDrawable; kw...) = AxisRecorderDrawable3
 
 
 # close has different behavior for ImageDrawable vs other Drawables
-ImageDrawable(dw::AxisImageDrawable3) = ImageDrawable(dw.surface, dw.ctx, dw.width, dw.height, dw.fname)
+PlotKit.ImageDrawable(dw::AxisImageDrawable3) = ImageDrawable(dw.surface, dw.ctx, dw.width, dw.height, dw.fname)
 PlotKitCairo.close(dw::AxisImageDrawable3) = PlotKitCairo.close(ImageDrawable(dw))
 
 # paint and save only apply to RecorderDrawables
-RecorderDrawable(dw::AxisRecorderDrawable3) = RecorderDrawable(dw.surface, dw.ctx, dw.width, dw.height)
+PlotKit.RecorderDrawable(dw::AxisRecorderDrawable3) = RecorderDrawable(dw.surface, dw.ctx, dw.width, dw.height)
 PlotKitCairo.paint(ctx::CairoContext, r::AxisRecorderDrawable3, args...) = PlotKitCairo.paint(ctx, RecorderDrawable(r), args...)
 PlotKitCairo.save(r::AxisRecorderDrawable3, args...) = PlotKitCairo.save(RecorderDrawable(r), args...)
 
